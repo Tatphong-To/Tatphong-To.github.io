@@ -1,0 +1,215 @@
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgb(236 238 240 / 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.nav--scrolled {
+  border-bottom-color: var(--line);
+  box-shadow: 0 6px 20px rgb(31 42 55 / 0.06);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: var(--nav-h);
+}
+
+/* ---------- โลโก้ ---------- */
+.nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nav__mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  background: var(--navy);
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  box-shadow: inset 0 -3px 0 var(--gold);
+}
+
+.nav__brand {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.nav__brand span {
+  color: var(--gold-ink);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+/* ---------- เมนู ---------- */
+.nav__menu {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav__links {
+  display: flex;
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav__links a {
+  position: relative;
+  display: block;
+  padding: 6px 0;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #5b6772;
+  transition: color 0.2s;
+}
+
+.nav__links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s;
+}
+
+.nav__links a:hover,
+.nav__links a.is-active {
+  color: var(--ink);
+}
+
+.nav__links a:hover::after,
+.nav__links a.is-active::after {
+  transform: scaleX(1);
+}
+
+.nav__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nav__cta svg {
+  width: 16px;
+  height: 16px;
+  color: var(--gold);
+  transition: transform 0.25s;
+}
+
+.nav__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgb(31 42 55 / 0.2);
+}
+
+.nav__cta:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.nav__toggle {
+  display: none;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.nav__toggle svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---------- มือถือ / แท็บเล็ต ---------- */
+@media (max-width: 960px) {
+  .nav__toggle {
+    display: grid;
+  }
+
+  .nav__menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 12px 24px 24px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 16px 30px rgb(31 42 55 / 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+  }
+
+  .nav--open .nav__menu {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  .nav__links {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .nav__links a {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav__links a::after {
+    display: none;
+  }
+
+  .nav__links a.is-active {
+    color: var(--gold-ink);
+  }
+
+  .nav__cta {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .nav__menu {
+    padding-inline: 16px;
+  }
+}

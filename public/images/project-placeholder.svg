@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <rect width="800" height="500" fill="#c9d1d7"/>
+  <rect x="330" y="180" width="140" height="110" rx="10" fill="none" stroke="#8a9aa6" stroke-width="8"/>
+  <circle cx="370" cy="215" r="12" fill="#8a9aa6"/>
+  <path d="M340 280l40-40 30 25 25-20 30 35z" fill="#8a9aa6"/>
+  <text x="400" y="340" font-family="sans-serif" font-size="24" fill="#6b7a86" text-anchor="middle">ใส่รูปโปรเจกต์</text>
+</svg>

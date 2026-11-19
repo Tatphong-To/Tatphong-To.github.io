@@ -1,0 +1,195 @@
+.footer {
+  position: relative;
+  background: var(--navy);
+  color: #b9c3cc;
+  font-size: 0.9rem;
+  border-top: 6px solid var(--accent); /* แถบเหลืองเหมือนในดีไซน์ */
+}
+
+.footer__grid {
+  /* 3 คอลัมน์ กระจายเต็มความกว้าง: ชิดซ้าย | กลาง | ชิดขวา */
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: space-between;
+  gap: 40px;
+  padding-top: 56px;
+  padding-bottom: 44px;
+}
+
+.footer h2 {
+  margin: 0 0 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.footer p {
+  margin: 0;
+  font-weight: 300;
+}
+
+/* ---------- แบรนด์ ---------- */
+.footer__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.footer__logo em {
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--gold);
+}
+
+.footer__mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 0.95rem;
+}
+
+.footer__brand p {
+  max-width: 30ch;
+}
+
+.footer__email {
+  display: inline-block;
+  margin-top: 14px;
+  color: #fff;
+  border-bottom: 1px solid var(--navy-line);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.footer__email:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+/* ---------- ลิงก์ ---------- */
+.footer__links {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer__links a {
+  font-weight: 300;
+  transition: color 0.2s, padding 0.2s;
+}
+
+.footer__links a:hover {
+  color: var(--gold);
+  padding-left: 4px;
+}
+
+/* ---------- Social ---------- */
+.footer__social {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.footer__social a {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--navy-line);
+  background: var(--navy-soft);
+  color: #fff;
+  transition: transform 0.2s, background 0.2s, color 0.2s;
+}
+
+.footer__social svg {
+  width: 18px;
+  height: 18px;
+}
+
+.footer__social a:hover {
+  transform: translateY(-3px);
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--navy);
+}
+
+.footer .footer__status {
+  font-weight: 500;
+  color: var(--gold);
+  line-height: 1.6;
+}
+
+/* ---------- แถบล่างสุด ---------- */
+.footer__bottom {
+  border-top: 1px solid var(--navy-line);
+  font-size: 0.8rem;
+}
+
+.footer__bottom-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+.footer__made {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer__made svg {
+  width: 14px;
+  height: 14px;
+  color: #e5566a;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 760px) {
+  /* แบรนด์เต็มแถว, Quick Links + Follow Me อยู่คู่กัน */
+  .footer__grid {
+    grid-template-columns: 1fr 1fr;
+    justify-content: stretch;
+    gap: 32px 20px;
+    padding-top: 44px;
+  }
+
+  .footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+
+  .footer__links {
+    gap: 2px;
+  }
+
+  .footer__links a {
+    display: inline-block;
+    padding: 6px 0;
+  }
+
+  .footer__bottom-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+}

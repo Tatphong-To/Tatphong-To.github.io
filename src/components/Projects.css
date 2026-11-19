@@ -1,0 +1,409 @@
+.projects {
+  padding: var(--section-space) 0;
+  overflow: hidden; /* การ์ดข้างโผล่จากขอบจอ */
+}
+
+/* ---------- หัว section ---------- */
+/* 3 คอลัมน์: ว่าง | หัวข้อ (กลาง) | ลิงก์ (ขวา) -> หัวข้ออยู่กึ่งกลางจริง */
+.projects__head {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+
+.projects__heading {
+  grid-column: 2;
+  text-align: center;
+}
+
+.projects__head .projects__more {
+  grid-column: 3;
+  justify-self: end;
+  margin-bottom: 8px; /* ให้อยู่แนวเดียวกับตัวหนังสือ "My Project" */
+}
+
+.projects__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+}
+
+.projects__eyebrow::before,
+.projects__eyebrow::after {
+  content: '';
+  width: 24px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gold);
+}
+
+.projects__title {
+  margin: 0;
+  font-size: clamp(1.8rem, 3.4vw, 2.4rem);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+/* ---------- Carousel ---------- */
+.carousel {
+  --w: min(760px, 62vw); /* ความกว้างการ์ดกลาง */
+  --ratio: 1.6; /* กว้าง / สูง */
+  --h: calc(var(--w) / var(--ratio));
+  --step: 0.94; /* ระยะการ์ดข้าง (เท่าของ --w) */
+  --side-scale: 0.82;
+  position: relative;
+  outline: none;
+}
+
+.carousel:focus-visible .slide.is-active {
+  outline: 3px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.carousel__stage {
+  position: relative;
+  height: var(--h);
+  touch-action: pan-y; /* ให้เลื่อนหน้าแนวตั้งได้ ปัดแนวนอนเป็นของ carousel */
+  user-select: none;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--w);
+  height: var(--h);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--circle);
+  z-index: 2;
+  transform: translateX(calc(-50% + var(--o) * var(--w) * var(--step)))
+    scale(var(--side-scale));
+  opacity: 0.55;
+  filter: grayscale(1);
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgb(31 42 55 / 0.12);
+  transition:
+    transform 0.6s cubic-bezier(0.22, 0.8, 0.24, 1),
+    opacity 0.6s ease,
+    filter 0.6s ease,
+    box-shadow 0.6s ease;
+}
+
+.slide:not(.is-active):hover {
+  opacity: 0.75;
+}
+
+.slide.is-active {
+  z-index: 3;
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+  filter: none;
+  cursor: default;
+  box-shadow: 0 28px 56px rgb(31 42 55 / 0.28);
+}
+
+/* การ์ดที่ไกลเกิน 1 ตำแหน่ง: จางหายก่อน แล้วค่อยย้ายตำแหน่ง (ไม่วิ่งตัดหน้าจอ) */
+.slide.is-hidden {
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    transform 0s linear 0.3s,
+    filter 0s;
+}
+
+.slide img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  pointer-events: none;
+}
+
+/* ชั้นสีเข้มทับรูป ให้อ่านตัวหนังสือออก */
+.slide__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgb(20 28 38 / 0.95) 0%, rgb(20 28 38 / 0.7) 45%, rgb(20 28 38 / 0.2) 100%),
+    linear-gradient(to right, rgb(20 28 38 / 0.55), transparent 70%);
+}
+
+.slide__content {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: clamp(20px, 4vw, 40px);
+  color: #fff;
+  transition: opacity 0.4s ease 0.15s;
+}
+
+.slide:not(.is-active) .slide__content {
+  opacity: 0.6;
+  transition-delay: 0s;
+}
+
+.slide__title {
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.slide__desc {
+  margin: 0;
+  max-width: 52ch;
+  font-size: clamp(0.85rem, 1.3vw, 0.98rem);
+  font-weight: 300;
+  line-height: 1.6;
+  color: #d5dce2;
+}
+
+.slide__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slide__tags li {
+  padding: 2px 12px;
+  border-radius: 999px;
+  border: 1px solid rgb(255 255 255 / 0.25);
+  background: rgb(255 255 255 / 0.1);
+  backdrop-filter: blur(4px);
+  font-size: 0.75rem;
+}
+
+.slide__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.slide__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 5px 5px 18px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--navy);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.slide__more-icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gold);
+  transition: transform 0.25s;
+}
+
+.slide__more-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.slide__more:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgb(0 0 0 / 0.25);
+}
+
+.slide__more:hover .slide__more-icon {
+  transform: translateX(3px);
+}
+
+.slide__repo {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgb(255 255 255 / 0.4);
+  color: #fff;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.slide__repo svg {
+  width: 18px;
+  height: 18px;
+}
+
+.slide__repo:hover {
+  background: #fff;
+  border-color: #fff;
+  color: var(--navy);
+}
+
+/* ---------- ลูกศร + จุด ---------- */
+.carousel__bar {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.carousel__arrow {
+  position: absolute;
+  top: calc(var(--h) / 2);
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgb(31 42 55 / 0.3);
+  transform: translateY(-50%);
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+/* วางทับขอบการ์ดข้างๆ */
+.carousel__arrow--prev {
+  left: max(12px, calc(50% - var(--w) / 2 - 80px));
+}
+
+.carousel__arrow--next {
+  right: max(12px, calc(50% - var(--w) / 2 - 80px));
+}
+
+.carousel__arrow svg {
+  width: 20px;
+  height: 20px;
+}
+
+.carousel__arrow:hover {
+  background: var(--gold);
+  color: var(--navy);
+  transform: translateY(-50%) scale(1.06);
+}
+
+.carousel__dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.carousel__dots button {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--line);
+  cursor: pointer;
+  transition: width 0.3s, background 0.3s;
+}
+
+.carousel__dots button:hover {
+  background: var(--muted);
+}
+
+.carousel__dots button.is-active {
+  width: 28px;
+  background: var(--gold);
+}
+
+.projects__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 2px;
+  border-bottom: 2px solid var(--gold);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.projects__more svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.25s;
+}
+
+.projects__more:hover svg {
+  transform: translateX(4px);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .carousel {
+    --w: 74vw;
+    --ratio: 1.25;
+  }
+}
+
+/* มือถือ: การ์ดกลาง ~85% ของจอ การ์ดข้างโผล่นิดเดียว ลูกศรย้ายไปข้างจุด */
+@media (max-width: 640px) {
+  /* มือถือ: ลิงก์ลงไปอยู่ใต้หัวข้อ */
+  .projects__head {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .projects__heading,
+  .projects__head .projects__more {
+    grid-column: 1;
+    justify-self: center;
+    margin-bottom: 0;
+  }
+
+  .carousel {
+    --w: 85vw;
+    --ratio: 0.78;
+    --step: 0.96;
+    --side-scale: 0.86;
+  }
+
+  .slide {
+    border-radius: 14px;
+  }
+
+  .carousel__bar {
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: var(--w);
+    margin: 24px auto 0;
+  }
+
+  .carousel__arrow {
+    position: static;
+    width: 42px;
+    height: 42px;
+    transform: none;
+  }
+
+  .carousel__arrow:hover {
+    transform: scale(1.06);
+  }
+}
