@@ -76,7 +76,7 @@ export const projects = [
     description:
       'เว็บแนะนำเมนูอาหารไทยพร้อมวิเคราะห์การกิน งานของผม: scraper และตัว match วัตถุดิบ (711 สูตร, 7,191 สินค้า), ชั้น LLM ด้วย Ollama และหน้าวิเคราะห์ทั้ง Angular และ Spring Boot',
     tags: ['Spring Boot', 'Angular', 'Python', 'Ollama'],
-    image: '/projects/kinraidee.png',
+    image: '/projects/kinraidee.jpg',
     link: 'https://natcha-runsri.github.io/KinRaiDee-Demo/',
     repo: 'https://github.com/natcha-runsri/KinRaiDee-Demo',
   },
@@ -85,7 +85,7 @@ export const projects = [
     description:
       'เว็บแนะนำและเปรียบเทียบอุปกรณ์ไอทีจาก 3 ร้าน งานของผม: data pipeline (10,138 → 8,386 รายการ), ตัวอ่านงบและหมวดสินค้าไทย/อังกฤษ และ CI/CD ที่ deploy เฉพาะเมื่อเทสต์ผ่าน',
     tags: ['Python', 'Angular', 'Docker', 'GitHub Actions'],
-    image: '/projects/auoyoo.png',
+    image: '/projects/auoyoo.jpg',
     link: 'https://natcha-runsri.github.io/Auoyoo-Demo/',
     repo: 'https://github.com/natcha-runsri/Auoyoo-Demo',
   },
@@ -94,7 +94,7 @@ export const projects = [
     description:
       'API แนะนำเมนูตามเป้าหมายพลังงานรายวันและอาหารที่แพ้ พร้อม Airflow ETL รายวันและ K-Means ที่ติดตามด้วย MLflow',
     tags: ['FastAPI', 'Airflow', 'MLflow', 'PostgreSQL'],
-    image: '/projects/food-ml.png',
+    image: '/projects/food-ml.jpg',
     link: '',
     repo: 'https://github.com/Tatphong-To/food_ml_model',
   },
@@ -103,7 +103,7 @@ export const projects = [
     description:
       'แอปจองตั๋วหนังด้วย Flutter + Firebase ตั้งแต่สมัครสมาชิก ดูตัวอย่างหนัง เลือกรอบและที่นั่ง (ใช้ Firestore transaction กันจองซ้ำ) จนถึงรับตั๋วเป็น QR Code งานของผม (ร่วมพัฒนาทีม 2 คน): หน้าแอป ระบบ login ด้วย Firebase Auth และการเชื่อมข้อมูลกับ Firestore',
     tags: ['Flutter', 'Firebase', 'Firestore'],
-    image: '/projects/cinema-app.png',
+    image: '/projects/cinema-app.jpg',
     link: 'https://natcha-runsri.github.io/Movie_App/',
     repo: 'https://github.com/natcha-runsri/Movie_App',
   },
