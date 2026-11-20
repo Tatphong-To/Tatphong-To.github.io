@@ -1,23 +1,9 @@
-/* ===== Design tokens: "จารึกบนหินอ่อน" ===== */
+/* ===== Wireframe: reset + layout พื้นฐาน ขาวดำ ไม่มีการตกแต่ง ===== */
 :root {
-  --marble: #e9e8e4; /* พื้นหินอ่อน */
-  --marble-deep: #dad8d1;
-  --basalt: #23252a; /* หินบะซอลต์: ตัวหนังสือ + แถบเข้ม */
-  --basalt-soft: #2f3137;
-  --porphyry: #6a1f2b; /* หินพอร์ฟีรี: สีเน้น ใช้น้อยที่สุด */
-  --porphyry-hi: #85293a;
-  --bronze: #9a7440;
-  --bronze-light: #c9a877; /* บรอนซ์บนพื้นเข้ม */
-  --stone: #b3afa6; /* เส้น/กรอบ */
-  --ink: #23252a;
-  --ink-soft: #55575d;
-  --on-dark: #e9e8e4;
-  --on-dark-soft: #a9a6a0;
   --container: 1120px;
-  --nav-h: 72px;
-  --section-space: clamp(64px, 8vw, 112px);
-  --display: 'Marcellus', 'Taviraj', Georgia, serif;
-  --text: 'Taviraj', Georgia, serif;
+  --nav-h: 64px;
+  --gap: 24px;
+  --section-space: 64px;
 }
 
 *,
@@ -32,40 +18,56 @@ html {
 
 body {
   margin: 0;
-  font-family: var(--text);
-  font-size: 1.0625rem;
-  font-weight: 400;
-  line-height: 1.8;
-  background: var(--marble);
-  color: var(--ink);
-  -webkit-font-smoothing: antialiased;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  background: #fff;
+  color: #000;
 }
 
 h1,
 h2,
-h3 {
-  font-family: var(--display);
-  font-weight: 400;
+h3,
+p,
+figure,
+dl,
+dd {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 img {
-  max-width: 100%;
   display: block;
+  max-width: 100%;
+  filter: grayscale(1); /* wireframe = ขาวดำ */
+}
+
+svg {
+  display: block;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
 }
 
 a {
   color: inherit;
-  text-decoration: none;
 }
 
-button,
-input {
+button {
   font: inherit;
+  color: inherit;
+  background: #fff;
+  border: 1px solid #000;
+  cursor: pointer;
 }
 
 :focus-visible {
-  outline: 2px solid var(--bronze);
-  outline-offset: 3px;
+  outline: 2px solid #000;
+  outline-offset: 2px;
 }
 
 /* ให้ลิงก์ในเมนูเลื่อนไปแล้วไม่โดน navbar บัง */
@@ -78,15 +80,12 @@ footer[id] {
   width: 100%;
   max-width: var(--container);
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 16px;
 }
 
-/* หัวข้อ section ใช้ร่วมกัน */
 .section-title {
-  margin: 0 0 clamp(28px, 4vw, 48px);
-  font-size: clamp(2.2rem, 4.4vw, 3.4rem);
-  line-height: 1.1;
-  letter-spacing: 0.03em;
+  margin-bottom: var(--gap);
+  font-size: 1.75rem;
 }
 
 /* ปุ่ม (ใช้ร่วมกัน) */
@@ -94,46 +93,15 @@ footer[id] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 13px 24px;
-  border: 1px solid var(--basalt);
-  font-family: var(--display);
-  font-size: 1rem;
-  letter-spacing: 0.04em;
-  line-height: 1.2;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid #000;
+  text-decoration: none;
 }
 
 .btn svg {
   width: 16px;
   height: 16px;
-}
-
-.btn--primary {
-  background: var(--porphyry);
-  border-color: var(--porphyry);
-  color: var(--marble);
-}
-
-.btn--primary:hover {
-  background: var(--porphyry-hi);
-  border-color: var(--porphyry-hi);
-}
-
-.btn--ghost {
-  background: transparent;
-  color: var(--ink);
-}
-
-.btn--ghost:hover {
-  background: var(--basalt);
-  color: var(--marble);
-}
-
-@media (max-width: 600px) {
-  .container {
-    padding: 0 16px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -144,7 +112,6 @@ footer[id] {
   *,
   *::before,
   *::after {
-    animation: none !important;
     transition: none !important;
   }
 }

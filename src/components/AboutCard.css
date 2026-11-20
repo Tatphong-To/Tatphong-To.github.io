@@ -1,47 +1,33 @@
-/* แถบหินบะซอลต์เต็มจอ */
 .about {
   padding: var(--section-space) 0;
-  background: var(--basalt);
-  color: var(--on-dark);
+  border-bottom: 1px solid #000;
 }
 
 .about__card {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: clamp(40px, 6vw, 96px);
-  align-items: start;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
 }
 
 .about__headline {
-  margin: 0 0 18px;
-  font-family: var(--display);
-  font-size: clamp(1.3rem, 2vw, 1.6rem);
-  line-height: 1.5;
-}
-
-.about__text {
-  max-width: 60ch;
-  margin: 0;
-  color: var(--on-dark-soft);
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 
 /* ---------- ข้อมูลติดต่อ ---------- */
 .about__info {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 32px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  border-top: 1px solid #000;
 }
 
 .about__info li {
   display: flex;
-  align-items: flex-start;
-  gap: 14px;
+  gap: 12px;
   min-width: 0;
-  padding: 18px 0;
-  border-top: 1px solid rgb(233 232 228 / 0.16);
+  padding: 12px 0;
+  border-bottom: 1px solid #000;
 }
 
 .about__info li.about__wide {
@@ -52,22 +38,9 @@
   min-width: 0;
 }
 
-.about__icon {
-  flex-shrink: 0;
-  padding-top: 4px;
-  color: var(--bronze-light);
-}
-
-.about__icon svg {
-  display: block;
-  width: 20px;
-  height: 20px;
-}
-
 .about__label {
   display: block;
-  font-size: 0.88rem;
-  color: var(--on-dark-soft);
+  font-size: 0.85rem;
 }
 
 .about__value {
@@ -75,22 +48,9 @@
   overflow-wrap: anywhere;
 }
 
-a.about__value {
-  text-decoration: underline;
-  text-decoration-color: rgb(201 168 119 / 0.5);
-  text-underline-offset: 4px;
-  transition: color 0.2s;
-}
-
-a.about__value:hover {
-  color: var(--bronze-light);
-}
-
-/* ---------- Responsive ---------- */
 @media (max-width: 960px) {
   .about__card {
     grid-template-columns: 1fr;
-    gap: 40px;
   }
 }
 

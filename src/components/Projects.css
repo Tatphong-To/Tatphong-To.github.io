@@ -1,56 +1,42 @@
 .projects {
   padding: var(--section-space) 0;
+  border-bottom: 1px solid #000;
   overflow: hidden; /* การ์ดข้างโผล่จากขอบจอ */
 }
 
-/* ---------- หัว section ---------- */
 .projects__head {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 12px 24px;
-  margin-bottom: clamp(28px, 4vw, 48px);
+  gap: 12px;
+  margin-bottom: var(--gap);
 }
 
 .projects__head .projects__title {
   margin: 0;
 }
 
-.projects__more {
-  padding-bottom: 2px;
-  border-bottom: 1px solid var(--porphyry);
-  font-family: var(--display);
-  letter-spacing: 0.03em;
-  color: var(--porphyry);
-  transition: color 0.2s, border-color 0.2s;
-}
-
-.projects__more:hover {
-  color: var(--porphyry-hi);
-  border-bottom-color: var(--porphyry-hi);
-}
-
-/* ---------- Carousel ---------- */
+/* ---------- Carousel (กลไกเลื่อนการ์ด) ---------- */
 .carousel {
-  --w: min(760px, 62vw); /* ความกว้างการ์ดกลาง */
-  --ratio: 1.6; /* กว้าง / สูง */
+  --w: min(760px, 62vw);
+  --ratio: 1.6;
   --h: calc(var(--w) / var(--ratio));
-  --step: 0.94; /* ระยะการ์ดข้าง (เท่าของ --w) */
+  --step: 0.94;
   --side-scale: 0.82;
   position: relative;
   outline: none;
 }
 
 .carousel:focus-visible .slide.is-active {
-  outline: 2px solid var(--bronze);
-  outline-offset: 6px;
+  outline: 2px solid #000;
+  outline-offset: 4px;
 }
 
 .carousel__stage {
   position: relative;
   height: var(--h);
-  touch-action: pan-y; /* ให้เลื่อนหน้าแนวตั้งได้ ปัดแนวนอนเป็นของ carousel */
+  touch-action: pan-y;
   user-select: none;
 }
 
@@ -58,44 +44,31 @@
   position: absolute;
   top: 0;
   left: 50%;
+  z-index: 2;
   width: var(--w);
   height: var(--h);
   overflow: hidden;
-  background: var(--marble-deep);
-  z-index: 2;
-  transform: translateX(calc(-50% + var(--o) * var(--w) * var(--step)))
-    scale(var(--side-scale));
-  opacity: 0.5;
-  filter: grayscale(1);
+  border: 1px solid #000;
+  background: #fff;
+  transform: translateX(calc(-50% + var(--o) * var(--w) * var(--step))) scale(var(--side-scale));
+  opacity: 0.4;
   cursor: pointer;
-  transition:
-    transform 0.6s cubic-bezier(0.22, 0.8, 0.24, 1),
-    opacity 0.6s ease,
-    filter 0.6s ease;
-}
-
-.slide:not(.is-active):hover {
-  opacity: 0.7;
+  transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
 .slide.is-active {
   z-index: 3;
   transform: translateX(-50%) scale(1);
   opacity: 1;
-  filter: none;
   cursor: default;
-  box-shadow: 0 30px 60px -20px rgb(35 37 42 / 0.45);
 }
 
-/* การ์ดที่ไกลเกิน 1 ตำแหน่ง: จางหายก่อน แล้วค่อยย้ายตำแหน่ง (ไม่วิ่งตัดหน้าจอ) */
+/* การ์ดที่ไกลเกิน 1 ตำแหน่ง: ซ่อนก่อน แล้วค่อยย้ายตำแหน่ง */
 .slide.is-hidden {
   z-index: 1;
   opacity: 0;
   pointer-events: none;
-  transition:
-    opacity 0.3s ease,
-    transform 0s linear 0.3s,
-    filter 0s;
+  transition: opacity 0.2s ease, transform 0s linear 0.2s;
 }
 
 .slide img {
@@ -108,91 +81,57 @@
   pointer-events: none;
 }
 
-/* ชั้นสีบะซอลต์ทับรูป ให้อ่านตัวหนังสือออก */
 .slide__shade {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to top, rgb(35 37 42 / 0.96) 0%, rgb(35 37 42 / 0.72) 45%, rgb(35 37 42 / 0.15) 100%),
-    linear-gradient(to right, rgb(35 37 42 / 0.55), transparent 70%);
+  display: none;
 }
 
+/* เนื้อหาการ์ด: กล่องขาวด้านล่าง */
 .slide__content {
   position: absolute;
   inset: auto 0 0 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
-  padding: clamp(20px, 4vw, 40px);
-  color: var(--on-dark);
-  transition: opacity 0.4s ease 0.15s;
-}
-
-.slide:not(.is-active) .slide__content {
-  opacity: 0.6;
-  transition-delay: 0s;
+  gap: 8px;
+  padding: 16px;
+  background: #fff;
+  border-top: 1px solid #000;
 }
 
 .slide__title {
-  margin: 0;
-  font-size: clamp(1.4rem, 3vw, 2.1rem);
-  line-height: 1.2;
-}
-
-.slide__desc {
-  max-width: 60ch;
-  margin: 0;
-  font-size: clamp(0.88rem, 1.3vw, 0.98rem);
-  line-height: 1.7;
-  color: #cfccc5;
+  font-size: 1.25rem;
 }
 
 .slide__tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
 }
 
 .slide__tags li {
-  padding: 1px 10px;
-  border: 1px solid rgb(233 232 228 / 0.35);
+  padding: 0 8px;
+  border: 1px solid #000;
   font-size: 0.8rem;
 }
 
 .slide__actions {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 4px;
+  gap: 8px;
 }
 
 .slide__more {
-  padding: 10px 20px;
-  border: 1px solid var(--marble);
-  background: var(--marble);
-  color: var(--basalt);
-  font-family: var(--display);
-  letter-spacing: 0.03em;
-  transition: background 0.2s, color 0.2s;
-}
-
-.slide__more:hover {
-  background: transparent;
-  color: var(--marble);
+  padding: 6px 12px;
+  border: 1px solid #000;
+  text-decoration: none;
 }
 
 .slide__repo {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid rgb(233 232 228 / 0.5);
-  color: var(--marble);
-  transition: background 0.2s, color 0.2s;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #000;
 }
 
 .slide__repo svg {
@@ -200,16 +139,11 @@
   height: 18px;
 }
 
-.slide__repo:hover {
-  background: var(--marble);
-  color: var(--basalt);
-}
-
-/* ---------- ลูกศร + ขีดบอกตำแหน่ง ---------- */
+/* ---------- ลูกศร + ตัวบอกตำแหน่ง ---------- */
 .carousel__bar {
   display: flex;
   justify-content: center;
-  margin-top: 32px;
+  margin-top: var(--gap);
 }
 
 .carousel__arrow {
@@ -218,32 +152,17 @@
   z-index: 4;
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
-  border: 0;
-  background: var(--basalt);
-  color: var(--marble);
-  cursor: pointer;
+  width: 44px;
+  height: 44px;
   transform: translateY(-50%);
-  transition: background 0.2s;
 }
 
-/* วางทับขอบการ์ดข้างๆ */
 .carousel__arrow--prev {
-  left: max(12px, calc(50% - var(--w) / 2 - 80px));
+  left: max(12px, calc(50% - var(--w) / 2 - 64px));
 }
 
 .carousel__arrow--next {
-  right: max(12px, calc(50% - var(--w) / 2 - 80px));
-}
-
-.carousel__arrow svg {
-  width: 20px;
-  height: 20px;
-}
-
-.carousel__arrow:hover {
-  background: var(--porphyry);
+  right: max(12px, calc(50% - var(--w) / 2 - 64px));
 }
 
 .carousel__dots {
@@ -252,44 +171,16 @@
   gap: 8px;
 }
 
-/* ปุ่มสูง 24px ให้กดง่าย แต่วาดเป็นขีดบาง */
 .carousel__dots button {
-  position: relative;
-  width: 24px;
-  height: 24px;
+  width: 12px;
+  height: 12px;
   padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  transition: width 0.3s;
-}
-
-.carousel__dots button::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 2px;
-  background: var(--stone);
-  transform: translateY(-50%);
-  transition: background 0.3s;
-}
-
-.carousel__dots button:hover::before {
-  background: var(--ink-soft);
 }
 
 .carousel__dots button.is-active {
-  width: 40px;
+  background: #000;
 }
 
-.carousel__dots button.is-active::before {
-  height: 3px;
-  background: var(--porphyry);
-}
-
-/* ---------- Responsive ---------- */
 @media (max-width: 900px) {
   .carousel {
     --w: 74vw;
@@ -297,7 +188,6 @@
   }
 }
 
-/* มือถือ: การ์ดกลาง ~85% ของจอ การ์ดข้างโผล่นิดเดียว ลูกศรย้ายไปข้างขีด */
 @media (max-width: 640px) {
   .carousel {
     --w: 85vw;
@@ -309,15 +199,12 @@
   .carousel__bar {
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
     width: var(--w);
-    margin: 24px auto 0;
+    margin: var(--gap) auto 0;
   }
 
   .carousel__arrow {
     position: static;
-    width: 44px;
-    height: 44px;
     transform: none;
   }
 }

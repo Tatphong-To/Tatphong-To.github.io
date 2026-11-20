@@ -1,89 +1,52 @@
 .footer {
-  background: var(--basalt);
-  color: var(--on-dark);
-  /* ฐานอาคาร: เส้นบาง + เส้นหนา (กลับด้านจากคานใน hero) */
-  border-top: 1px solid var(--basalt);
-  box-shadow: 0 -5px 0 var(--marble), 0 -8px 0 var(--basalt);
+  border-top: 1px solid #000;
 }
 
 .footer__grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr;
-  gap: 40px;
-  padding-top: clamp(56px, 7vw, 88px);
-  padding-bottom: clamp(48px, 6vw, 72px);
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--gap);
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
-/* ---------- แบรนด์ ---------- */
 .footer__logo {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  font-family: var(--display);
-  font-size: 1.1rem;
-  letter-spacing: 0.14em;
+  gap: 8px;
+  text-decoration: none;
 }
 
 .footer__logo em {
   font-style: normal;
-  letter-spacing: 0.02em;
-  color: var(--on-dark-soft);
 }
 
 .footer__mark {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border: 1.5px solid var(--on-dark);
-  letter-spacing: 0.06em;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #000;
 }
 
 .footer__brand p {
-  max-width: 40ch;
-  margin: 18px 0 10px;
-  color: var(--on-dark-soft);
+  margin: 12px 0 8px;
 }
 
-.footer__email {
-  text-decoration: underline;
-  text-decoration-color: rgb(201 168 119 / 0.5);
-  text-underline-offset: 4px;
-  transition: color 0.2s;
-}
-
-.footer__email:hover {
-  color: var(--bronze-light);
-}
-
-/* ---------- คอลัมน์ลิงก์ ---------- */
 .footer__col h2 {
-  margin: 0 0 14px;
-  font-size: 1.15rem;
-  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+  font-size: 1rem;
 }
 
 .footer__links {
   display: grid;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.footer__links a {
-  color: var(--on-dark-soft);
-  transition: color 0.2s;
-}
-
-.footer__links a:hover {
-  color: var(--on-dark);
+  gap: 4px;
 }
 
 .footer__social {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .footer__social svg {
@@ -91,29 +54,21 @@
   height: 18px;
 }
 
-/* ---------- แถบล่าง ---------- */
 .footer__bottom {
-  border-top: 1px solid rgb(233 232 228 / 0.14);
+  border-top: 1px solid #000;
 }
 
 .footer__bottom-inner {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 8px 24px;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  gap: 8px;
+  padding-top: 16px;
+  padding-bottom: 16px;
   font-size: 0.9rem;
-  color: var(--on-dark-soft);
-}
-
-.footer__bottom-inner p {
-  margin: 0;
 }
 
 .footer__bottom abbr {
-  font-family: var(--display);
-  letter-spacing: 0.06em;
   text-decoration: none;
 }
 

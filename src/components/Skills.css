@@ -1,102 +1,55 @@
 .skills {
   padding: var(--section-space) 0;
+  border-bottom: 1px solid #000;
 }
 
-/* แต่ละหมวด = เสาหนึ่งต้น: หัวเสา (เส้นคู่) ด้านบน ฐานเสาด้านล่าง */
 .skills__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: clamp(20px, 3vw, 40px);
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  gap: var(--gap);
 }
 
 .skill-card {
-  position: relative;
-  padding: 30px 0 26px;
-  border-top: 3px solid var(--basalt);
-  border-bottom: 1px solid var(--basalt);
+  padding: 16px;
+  border: 1px solid #000;
 }
 
-.skill-card::before {
-  content: '';
-  position: absolute;
-  top: 4px;
-  left: 0;
-  right: 0;
-  border-top: 1px solid var(--basalt);
+.skill-card__head {
+  margin-bottom: 16px;
 }
 
 .skill-card__icon {
   display: block;
-  margin-bottom: 16px;
-  color: var(--porphyry);
-}
-
-.skill-card__icon svg {
-  display: block;
-  width: 28px;
-  height: 28px;
+  margin-bottom: 8px;
 }
 
 .skill-card h3 {
-  margin: 0 0 6px;
-  font-size: 1.5rem;
-  line-height: 1.2;
-}
-
-.skill-card__head p {
-  margin: 0 0 22px;
-  font-size: 0.95rem;
-  line-height: 1.65;
-  color: var(--ink-soft);
+  font-size: 1.15rem;
 }
 
 .skill-card__chips {
   display: grid;
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  gap: 8px;
 }
 
 .skill-chip {
   display: flex;
   align-items: center;
-  gap: 12px;
-  line-height: 1.4;
+  gap: 8px;
 }
 
+/* โลโก้เป็นสีดำ (ทับสีแบรนด์ที่ตั้งใน JSX) */
 .skill-chip svg {
-  flex-shrink: 0;
   width: 18px;
   height: 18px;
+  fill: currentColor;
 }
 
-/* skill ที่ไม่มีโลโก้: ตัวอักษรแรกในกรอบสี่เหลี่ยม */
 .skill-chip__letter {
   display: grid;
-  flex-shrink: 0;
   place-items: center;
   width: 18px;
   height: 18px;
-  border: 1px solid var(--stone);
-  font-family: var(--display);
-  font-size: 0.72rem;
-  line-height: 1;
-  color: var(--ink-soft);
-}
-
-.skill-card__empty {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--ink-soft);
-}
-
-@media (max-width: 520px) {
-  .skills__grid {
-    grid-template-columns: 1fr;
-    row-gap: 40px;
-  }
+  border: 1px solid #000;
+  font-size: 0.7rem;
 }

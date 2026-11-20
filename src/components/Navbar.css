@@ -2,120 +2,68 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgb(233 232 228 / 0.9);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.25s;
-}
-
-.nav--scrolled {
-  border-bottom-color: var(--stone);
+  background: #fff;
+  border-bottom: 1px solid #000;
 }
 
 .nav__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: var(--gap);
   height: var(--nav-h);
 }
 
-/* ---------- โลโก้ ---------- */
 .nav__logo {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
-  font-family: var(--display);
+  gap: 8px;
+  text-decoration: none;
 }
 
 .nav__mark {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border: 1.5px solid var(--basalt);
-  font-size: 1rem;
-  letter-spacing: 0.06em;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #000;
 }
 
-.nav__brand {
-  font-size: 1.1rem;
-  letter-spacing: 0.14em;
-}
-
-.nav__brand span {
-  letter-spacing: 0.02em;
-  color: var(--ink-soft);
-}
-
-/* ---------- เมนู ---------- */
 .nav__menu {
   display: flex;
   align-items: center;
-  gap: 36px;
+  gap: var(--gap);
 }
 
 .nav__links {
   display: flex;
-  gap: 30px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  gap: 16px;
 }
 
 .nav__links a {
   display: block;
-  padding: 6px 0;
-  border-bottom: 1px solid transparent;
-  font-family: var(--display);
-  font-size: 1.02rem;
-  letter-spacing: 0.03em;
-  color: var(--ink-soft);
-  transition: color 0.2s, border-color 0.2s;
+  padding: 4px 0;
 }
 
-.nav__links a:hover {
-  color: var(--ink);
-}
-
+/* ลิงก์ของ section ที่กำลังดูอยู่ */
 .nav__links a.is-active {
-  color: var(--porphyry);
-  border-bottom-color: var(--porphyry);
+  font-weight: 700;
 }
 
 .nav__cta {
-  padding: 9px 20px;
-  border: 1px solid var(--basalt);
-  font-family: var(--display);
-  font-size: 1rem;
-  letter-spacing: 0.04em;
-  transition: background 0.2s, color 0.2s;
-}
-
-.nav__cta:hover {
-  background: var(--basalt);
-  color: var(--marble);
+  padding: 6px 12px;
+  border: 1px solid #000;
+  text-decoration: none;
 }
 
 .nav__toggle {
   display: none;
   place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--stone);
-  background: transparent;
-  color: var(--ink);
-  cursor: pointer;
+  width: 40px;
+  height: 40px;
 }
 
-.nav__toggle svg {
-  width: 22px;
-  height: 22px;
-}
-
-/* ---------- มือถือ / แท็บเล็ต ---------- */
+/* ---------- มือถือ / แท็บเล็ต: เมนูแบบพับ ---------- */
 @media (max-width: 960px) {
   .nav__toggle {
     display: grid;
@@ -126,22 +74,17 @@
     top: 100%;
     left: 0;
     right: 0;
+    display: none;
     flex-direction: column;
     align-items: stretch;
-    gap: 16px;
-    padding: 8px 24px 24px;
-    background: var(--marble);
-    border-bottom: 1px solid var(--stone);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px);
-    transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+    gap: 12px;
+    padding: 12px 16px 16px;
+    background: #fff;
+    border-bottom: 1px solid #000;
   }
 
   .nav--open .nav__menu {
-    opacity: 1;
-    visibility: visible;
-    transform: none;
+    display: flex;
   }
 
   .nav__links {
@@ -150,21 +93,11 @@
   }
 
   .nav__links a {
-    padding: 14px 0;
-    border-bottom: 1px solid var(--stone);
-  }
-
-  .nav__links a.is-active {
-    border-bottom-color: var(--stone);
+    padding: 10px 0;
+    border-bottom: 1px solid #000;
   }
 
   .nav__cta {
     text-align: center;
-  }
-}
-
-@media (max-width: 600px) {
-  .nav__menu {
-    padding-inline: 16px;
   }
 }
