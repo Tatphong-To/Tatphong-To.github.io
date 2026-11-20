@@ -19,22 +19,24 @@ export default function AboutCard() {
   const info = [
     { label: 'Name', value: `${firstName} ${lastName}`, Icon: UserIcon },
     { label: 'Tel.', value: phone, Icon: PhoneIcon, href: `tel:${phone?.replace(/[^\d+]/g, '')}` },
-    { label: 'Email', value: email, Icon: MailIcon, href: `mailto:${email}` },
     { label: 'Location', value: location, Icon: PinIcon },
     { label: 'Education', value: education, Icon: CapIcon },
     { label: 'Status', value: status, Icon: SparkIcon },
+    // อีเมลยาว -> กินเต็มแถวเสมอ ไม่ให้ถูกตัดคำ
+    { label: 'Email', value: email, Icon: MailIcon, href: `mailto:${email}`, wide: true },
   ].filter((item) => item.value?.trim())
 
-  // ถ้าจำนวนช่องเป็นเลขคี่ (เช่น ลบเบอร์โทรออก) ให้ช่องสุดท้ายกินเต็มแถว -> grid เต็มทุกแถว
-  if (info.length % 2 === 1) info[info.length - 1].wide = true
+  // ช่องปกติเหลือเศษ (เช่น ลบเบอร์โทรออก) ให้ช่องปกติตัวสุดท้ายกินเต็มแถว -> grid เต็มทุกแถว
+  const narrow = info.filter((item) => !item.wide)
+  if (narrow.length % 2 === 1) narrow[narrow.length - 1].wide = true
 
   return (
     <section className="about" id="about">
       <div className="container">
         <div className="about__card">
           <div className="about__intro">
-            <p className="about__eyebrow">About Me</p>
-            {aboutHeadline && <h2 className="about__headline">{aboutHeadline}</h2>}
+            <h2 className="section-title">About</h2>
+            {aboutHeadline && <p className="about__headline">{aboutHeadline}</p>}
             <p className="about__text">{about}</p>
           </div>
 

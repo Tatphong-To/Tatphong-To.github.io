@@ -1,202 +1,143 @@
 .hero {
-  position: relative;
-  padding: 32px 0 0;
-  overflow: hidden;
+  padding: clamp(40px, 6vw, 88px) 0 var(--section-space);
 }
 
-/* ลายจุดจางๆ ด้านหลัง */
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(var(--line) 1px, transparent 1px);
-  background-size: 22px 22px;
-  mask-image: radial-gradient(ellipse 60% 70% at 50% 45%, #000 20%, transparent 75%);
-  opacity: 0.55;
-  pointer-events: none;
-}
-
-.hero__inner {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1.25fr auto 0.75fr;
-  align-items: end;
-  gap: 24px;
-  min-height: min(460px, 70vh);
-}
-
-@media (max-width: 1100px) {
-  .hero__inner {
-    min-height: 380px;
-  }
-
-  .hero__actions {
-    min-width: 180px;
-  }
-}
-
-/* ---------- ข้อความซ้าย ---------- */
-.hero__intro {
-  align-self: center;
-  position: relative;
-  z-index: 2;
-  margin-right: -120px; /* ให้ชื่อทับวงกลมเหมือนในดีไซน์ */
-  padding-bottom: 24px;
+/* ให้ขนาดชื่ออิงความกว้าง container (cqi) ไม่ล้นจอ */
+.hero .container {
+  container-type: inline-size;
 }
 
 .hero__hello {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: clamp(1.6rem, 3.2vw, 2.5rem);
-  font-weight: 300;
-  line-height: 1.1;
+  margin: 0 0 14px;
+  font-family: var(--display);
+  font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--ink-soft);
 }
 
-.hero__hello::before {
-  content: '';
-  width: 36px;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--gold);
-}
-
+/* ---------- ชื่อ: ตัวอักษรสลักบนหิน ---------- */
 .hero__name {
-  margin: 6px 0 4px;
-  font-size: clamp(2rem, 4.4vw, 3.3rem);
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+  margin: 0;
+  padding-left: 0.09em; /* ชดเชย letter-spacing ตัวท้าย ให้อยู่กลางจริง */
+  font-size: clamp(2.4rem, 5.6cqi, 4.6rem);
+  line-height: 1;
+  letter-spacing: 0.09em;
+  text-align: center;
+  text-transform: uppercase;
   white-space: nowrap;
+  color: var(--basalt);
+  /* ขอบสว่างล่าง + เงาบน = ร่องที่ถูกสลักลงไป */
+  text-shadow:
+    0 1px 0 rgb(255 255 255 / 0.85),
+    0 -1px 0 rgb(0 0 0 / 0.18);
+  animation: unveil 1.4s cubic-bezier(0.6, 0, 0.2, 1) both;
 }
 
-/* ไฮไลต์นามสกุลด้วยแถบสีเหลืองอ่อน */
-.hero__mark {
-  background: linear-gradient(transparent 60%, var(--accent) 60% 92%, transparent 92%);
-  padding: 0 4px;
-  margin: 0 -4px;
+.hero__punct {
+  margin: 0 0.45em;
+  color: var(--stone);
+}
+
+/* คานหิน: เส้นหนา + เส้นบาง */
+.hero__beam {
+  height: 8px;
+  margin: clamp(22px, 3vw, 34px) 0 clamp(40px, 5vw, 64px);
+  border-top: 3px solid var(--basalt);
+  border-bottom: 1px solid var(--basalt);
+  animation: beam 1s cubic-bezier(0.6, 0, 0.2, 1) 0.7s both;
+}
+
+/* เผยชื่อจากกึ่งกลางออกสองข้าง เหมือนเปิดผ้าคลุมป้ายจารึก (จังหวะเดียวของหน้า) */
+@keyframes unveil {
+  from {
+    clip-path: inset(-20% 50% -20% 50%);
+  }
+  to {
+    clip-path: inset(-20% -5% -20% -5%);
+  }
+}
+
+@keyframes beam {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ---------- 3 คอลัมน์สมมาตร ---------- */
+.hero__body {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: clamp(28px, 4vw, 64px);
+}
+
+.hero__intro {
+  max-width: 34ch;
 }
 
 .hero__role {
-  margin: 0;
-  font-size: clamp(1.15rem, 2vw, 1.6rem);
-  font-weight: 300;
-  color: var(--muted);
+  margin: 0 0 12px;
+  font-family: var(--display);
+  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+  line-height: 1.3;
 }
 
 .hero__tagline {
-  margin: 18px 0 0;
-  max-width: 34ch;
-  font-size: 0.95rem;
-  font-weight: 300;
-  color: #4f5b66;
+  margin: 0;
+  color: var(--ink-soft);
 }
 
-/* ---------- รูปตรงกลาง ---------- */
+/* ---------- รูปในซุ้มประตูโค้ง ---------- */
 .hero__photo {
-  position: relative;
-  width: clamp(250px, 30vw, 340px);
-  aspect-ratio: 34 / 40;
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
 }
 
-.hero__circle,
-.hero__ring {
-  position: absolute;
-  top: 0;
-  left: 0;
+.hero__arch {
+  width: clamp(220px, 24vw, 290px);
+  aspect-ratio: 3 / 4;
+  padding: 9px;
+  border: 1px solid var(--stone);
+  border-radius: 999px 999px 0 0;
+}
+
+.hero__arch img {
   width: 100%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-}
-
-.hero__circle {
-  background: radial-gradient(circle at 35% 30%, #cdd8df, var(--circle) 70%);
-}
-
-.hero__ring {
-  inset: auto;
-  top: -14px;
-  left: -14px;
-  width: calc(100% + 28px);
-  border: 1.5px dashed var(--line);
-  animation: spin 40s linear infinite;
-}
-
-/* จุดสีทองที่วิ่งตามวงแหวน */
-.hero__ring::after {
-  content: '';
-  position: absolute;
-  top: 12%;
-  left: 6%;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--gold);
-}
-
-.hero__photo img {
-  position: relative;
-  width: 84%;
-  max-height: 100%;
-  object-fit: contain;
-  object-position: bottom;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 999px 999px 0 0;
+  background: var(--marble-deep);
 }
 
 .hero__status {
-  position: absolute;
-  top: 10%;
-  right: -28px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: var(--surface);
-  box-shadow: 0 6px 20px rgb(31 42 55 / 0.12);
-  font-size: 0.78rem;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.hero__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #3fb27f;
-  box-shadow: 0 0 0 0 rgb(63 178 127 / 0.6);
-  animation: pulse 2s infinite;
+  font-family: var(--display);
+  font-size: 0.98rem;
+  letter-spacing: 0.02em;
+  color: var(--porphyry);
 }
 
 /* ---------- ปุ่มขวา ---------- */
 .hero__actions {
-  align-self: center;
   justify-self: end;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 12px;
-  min-width: 200px;
-  padding-bottom: 24px;
+  min-width: 220px;
 }
 
 .hero__social {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 4px;
-  font-size: 0.85rem;
-  color: #4f5b66;
-}
-
-.hero__social ul {
-  display: flex;
   gap: 8px;
-  margin: 0;
+  margin: 6px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -204,189 +145,52 @@
 .hero__social a {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  background: var(--surface);
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--stone);
   color: var(--ink);
-  transition: transform 0.2s, background 0.2s, color 0.2s, border-color 0.2s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .hero__social a svg {
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
 }
 
 .hero__social a:hover {
-  transform: translateY(-3px);
-  background: var(--navy);
-  border-color: var(--navy);
-  color: var(--gold);
-}
-
-/* ---------- ปุ่ม (ใช้ซ้ำได้) ---------- */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 6px 6px 6px 20px;
-  border-radius: 999px;
-  border: 1px solid var(--navy);
-  font-size: 0.88rem;
-  font-weight: 500;
-  transition: transform 0.2s, box-shadow 0.2s, background 0.2s, color 0.2s;
-}
-
-.btn__icon {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  transition: transform 0.25s;
-}
-
-.btn__icon svg {
-  width: 15px;
-  height: 15px;
-}
-
-.btn--primary {
-  background: var(--navy);
-  color: #fff;
-}
-
-.btn--primary .btn__icon {
-  background: var(--gold);
-  color: var(--navy);
-}
-
-.btn--ghost {
-  background: var(--surface);
-  color: var(--ink);
-}
-
-.btn--ghost .btn__icon {
-  border: 1px solid var(--line);
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgb(31 42 55 / 0.15);
-}
-
-.btn--primary:hover .btn__icon {
-  transform: translateX(3px);
-}
-
-.btn--ghost:hover .btn__icon {
-  transform: translateY(2px);
-}
-
-/* ---------- Animation ---------- */
-.reveal {
-  opacity: 0;
-  animation: fade-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
-  animation-delay: var(--d, 0ms);
-}
-
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes spin {
-  to {
-    rotate: 360deg;
-  }
-}
-
-@keyframes pulse {
-  70% {
-    box-shadow: 0 0 0 8px rgb(63 178 127 / 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgb(63 178 127 / 0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-  }
+  background: var(--basalt);
+  border-color: var(--basalt);
+  color: var(--marble);
 }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 860px) {
-  .hero {
-    padding-top: 24px;
-  }
-
-  .hero__inner {
+  .hero__body {
     grid-template-columns: 1fr;
     justify-items: center;
     text-align: center;
-    gap: 28px;
-    min-height: 0;
-  }
-
-  .hero__intro {
-    margin-right: 0;
-    padding-bottom: 0;
-  }
-
-  .hero__hello {
-    justify-content: center;
-  }
-
-  .hero__name {
-    white-space: normal;
-  }
-
-  .hero__tagline {
-    margin-inline: auto;
+    gap: 36px;
   }
 
   .hero__actions {
-    order: 3;
     justify-self: center;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding-bottom: 32px;
-  }
-
-  .hero__social {
-    flex-basis: 100%;
-  }
-
-  .hero__photo {
-    order: 2;
-    width: min(280px, 72vw);
-  }
-
-  .hero__status {
-    right: -12px;
+    width: min(100%, 320px);
   }
 }
 
-/* มือถือเล็ก: ปุ่มเต็มความกว้าง */
-@media (max-width: 420px) {
-  .hero__actions {
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
+/* จอแคบ: ชื่อขึ้นสองบรรทัด ซ่อนจุดคั่น */
+@media (max-width: 760px) {
+  .hero__name {
+    font-size: clamp(2.2rem, 10.5cqi, 4rem);
+    line-height: 1.08;
+    white-space: normal;
   }
 
-  .hero__status {
-    right: 0;
+  .hero__word {
+    display: block;
+  }
+
+  .hero__punct {
+    display: none;
   }
 }

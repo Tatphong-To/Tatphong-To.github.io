@@ -58,15 +58,11 @@ export default function Projects() {
     <section className="projects" id="projects">
       <div className="container">
         <header className="projects__head">
-          <div className="projects__heading">
-            <p className="projects__eyebrow">Featured Projects</p>
-            <h2 className="projects__title">My Project</h2>
-          </div>
+          <h2 className="section-title projects__title">Projects</h2>
 
           {hasUrl(projectsMoreUrl) && (
             <a href={projectsMoreUrl} className="projects__more">
-              View all projects
-              <ArrowRightIcon />
+              All repositories on GitHub
             </a>
           )}
         </header>
@@ -127,10 +123,7 @@ export default function Projects() {
                         className="slide__more"
                         tabIndex={tab}
                       >
-                        See more
-                        <span className="slide__more-icon">
-                          <ArrowRightIcon />
-                        </span>
+                        Open live demo
                       </a>
                     )}
                     {hasUrl(p.repo) && (

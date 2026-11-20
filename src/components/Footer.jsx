@@ -1,12 +1,14 @@
 import { profile, navLinks, footer, hasUrl } from '../data.js'
-import { HeartIcon, socialIcons } from './Icons.jsx'
+import { socialIcons } from './Icons.jsx'
+import { toRoman } from '../roman.js'
 import './Footer.css'
 
+const year = new Date().getFullYear()
+
 export default function Footer() {
-  const { firstName, lastName, status, email } = profile
+  const { firstName, lastName, email } = profile
   const socials = profile.socials.filter((s) => hasUrl(s.url))
   const initials = `${firstName[0]}${lastName[0]}`
-  const year = new Date().getFullYear()
 
   return (
     <footer className="footer" id="contact">
@@ -28,7 +30,7 @@ export default function Footer() {
         </div>
 
         <nav className="footer__col" aria-label="ลิงก์ด่วน">
-          <h2>Quick Links</h2>
+          <h2>Pages</h2>
           <ul className="footer__links">
             {navLinks.map(({ label, href }) => (
               <li key={href}>
@@ -38,38 +40,32 @@ export default function Footer() {
           </ul>
         </nav>
 
-        <div className="footer__col">
-          <h2>Follow Me</h2>
-          <ul className="footer__social">
-            {socials.map(({ label, icon, url }) => {
-              const Icon = socialIcons[icon]
-              return (
-                <li key={label}>
-                  <a href={url} target="_blank" rel="noreferrer" aria-label={label}>
-                    {Icon ? <Icon /> : label[0]}
-                  </a>
-                </li>
-              )
-            })}
-          </ul>
-          {status && (
-            <p className="footer__status">
-              {status}
-              <br />
-              Let&rsquo;s build something together!
-            </p>
-          )}
-        </div>
+        {socials.length > 0 && (
+          <div className="footer__col">
+            <h2>Elsewhere</h2>
+            <ul className="footer__links">
+              {socials.map(({ label, icon, url }) => {
+                const Icon = socialIcons[icon]
+                return (
+                  <li key={label}>
+                    <a href={url} target="_blank" rel="noreferrer" className="footer__social">
+                      {Icon && <Icon />}
+                      {label}
+                    </a>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        )}
       </div>
 
       <div className="footer__bottom">
         <div className="container footer__bottom-inner">
           <p>
-            &copy; {year} {firstName} {lastName}. All rights reserved.
+            &copy; <abbr title={String(year)}>{toRoman(year)}</abbr> {firstName} {lastName}
           </p>
-          <p className="footer__made">
-            Made with <HeartIcon /> and React
-          </p>
+          <p>Built with React and Vite</p>
         </div>
       </div>
     </footer>

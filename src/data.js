@@ -34,28 +34,21 @@ export const footer = {
   tagline: 'สร้างเว็บและแอปที่ใช้งานได้จริง ตั้งแต่หน้าจอไปจนถึงระบบหลังบ้าน',
 }
 
-// ===== Skills (การ์ด 4 หมวด) =====
-// icon หมวด: frontend, backend, mobile, tools
+// ===== Skills (3 หมวด) =====
 // items: ชื่อ skill ที่มีโลโก้แล้ว -> HTML, CSS, JavaScript, React, Flutter, Git, GitHub, Docker
 //        (ชื่ออื่นใส่ได้ จะแสดงเป็นชิปตัวอักษรแทนโลโก้)
 export const skills = [
   {
     title: 'Front-end',
     icon: 'frontend',
-    description: 'หน้าเว็บที่ใช้งานง่ายและรองรับหลายหน้าจอ',
-    items: ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'React', 'Angular'],
+    description: 'หน้าเว็บและแอปมือถือที่ใช้งานง่าย รองรับหลายหน้าจอ',
+    items: ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'React', 'Angular', 'Flutter'],
   },
   {
     title: 'Back-end',
     icon: 'backend',
     description: 'API และระบบหลังบ้านที่เชื่อมกับฐานข้อมูล',
     items: ['Java', 'Spring Boot', 'Python', 'FastAPI', 'PostgreSQL'],
-  },
-  {
-    title: 'Mobile',
-    icon: 'mobile',
-    description: 'แอปข้ามแพลตฟอร์มจากโค้ดชุดเดียว',
-    items: ['Flutter'],
   },
   {
     title: 'Tools',

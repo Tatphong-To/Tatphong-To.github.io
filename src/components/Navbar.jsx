@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { profile, navLinks } from '../data.js'
-import { SendIcon, MenuIcon, CloseIcon } from './Icons.jsx'
+import { MenuIcon, CloseIcon } from './Icons.jsx'
 import './Navbar.css'
 
 export default function Navbar() {
@@ -120,8 +120,7 @@ export default function Navbar() {
           </ul>
 
           <a href="#contact" className="nav__cta" onClick={() => goTo('#contact')}>
-            Let&rsquo;s Talk
-            <SendIcon />
+            Let&rsquo;s talk
           </a>
         </nav>
 

@@ -1,118 +1,49 @@
+/* แถบหินบะซอลต์เต็มจอ */
 .about {
-  padding-top: 0; /* รูปโปรไฟล์วางชิดขอบบนการ์ดพอดี (ไม่ทับ) ตามดีไซน์ */
-  overflow-x: clip;
-}
-
-.about .container {
-  position: relative;
-}
-
-/* แถบเหลือง + แถบกรมท่าเต็มจอด้านหลังการ์ด (ตามดีไซน์) */
-.about .container::before {
-  content: '';
-  position: absolute;
-  top: 22%;
-  bottom: 14%;
-  left: 50%;
-  width: 100vw;
-  transform: translateX(-50%);
-  background: var(--navy);
-  border-top: 14px solid var(--accent);
+  padding: var(--section-space) 0;
+  background: var(--basalt);
+  color: var(--on-dark);
 }
 
 .about__card {
-  position: relative;
-  z-index: 1;
   display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  gap: 40px;
-  padding: 40px 48px;
-  border-radius: 14px;
-  background: #1b2531;
-  border: 1px solid var(--navy-line);
-  box-shadow: 0 24px 48px rgb(15 22 30 / 0.35);
-  color: #fff;
-}
-
-/* ---------- ซ้าย ---------- */
-.about__eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 10px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
-
-.about__eyebrow::before {
-  content: '';
-  width: 24px;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--gold);
+  grid-template-columns: 1.1fr 1fr;
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
 }
 
 .about__headline {
-  margin: 0 0 14px;
-  font-size: clamp(1.35rem, 2.3vw, 1.75rem);
-  font-weight: 600;
-  line-height: 1.3;
+  margin: 0 0 18px;
+  font-family: var(--display);
+  font-size: clamp(1.3rem, 2vw, 1.6rem);
+  line-height: 1.5;
 }
 
 .about__text {
+  max-width: 60ch;
   margin: 0;
-  max-width: 52ch;
-  font-size: 0.92rem;
-  font-weight: 300;
-  line-height: 1.7;
-  color: #b9c3cc;
+  color: var(--on-dark-soft);
 }
 
-/* ---------- ขวา ---------- */
+/* ---------- ข้อมูลติดต่อ ---------- */
 .about__info {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-auto-flow: row dense; /* ช่องปกติเติมช่องว่างที่เกิดจากช่องเต็มแถว */
-  gap: 22px 24px;
-  align-content: center;
+  gap: 0 32px;
   margin: 0;
-  padding: 4px 0 4px 36px;
-  border-left: 3px solid var(--gold); /* เส้นแบ่งสีทอง */
+  padding: 0;
   list-style: none;
 }
 
 .about__info li {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 14px;
   min-width: 0;
+  padding: 18px 0;
+  border-top: 1px solid rgb(233 232 228 / 0.16);
 }
 
-.about__icon {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: #e6eaed;
-  color: var(--navy);
-  transition: background 0.2s;
-}
-
-.about__icon svg {
-  width: 18px;
-  height: 18px;
-}
-
-.about__info li:hover .about__icon {
-  background: var(--gold);
-}
-
-/* ช่องที่กินเต็มแถว (อีเมล + ช่องที่เหลือเศษ) -> ทุกแถวเต็ม ไม่มีช่องว่าง */
 .about__info li.about__wide {
   grid-column: 1 / -1;
 }
@@ -121,57 +52,50 @@
   min-width: 0;
 }
 
+.about__icon {
+  flex-shrink: 0;
+  padding-top: 4px;
+  color: var(--bronze-light);
+}
+
+.about__icon svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
 .about__label {
   display: block;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #fff;
+  font-size: 0.88rem;
+  color: var(--on-dark-soft);
 }
 
 .about__value {
   display: block;
-  font-size: 0.88rem;
-  font-weight: 300;
-  color: #cfd6dc;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 a.about__value {
+  text-decoration: underline;
+  text-decoration-color: rgb(201 168 119 / 0.5);
+  text-underline-offset: 4px;
   transition: color 0.2s;
 }
 
 a.about__value:hover {
-  color: var(--gold);
+  color: var(--bronze-light);
 }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 1100px) {
-  .about .container::before {
-    top: 48px;
-    bottom: 48px;
-  }
-
+@media (max-width: 960px) {
   .about__card {
     grid-template-columns: 1fr;
-    gap: 28px;
-    padding: 32px 28px;
-  }
-
-  /* เส้นทองเปลี่ยนเป็นแนวนอน */
-  .about__info {
-    padding: 28px 0 0;
-    border-left: 0;
-    border-top: 3px solid var(--gold);
+    gap: 40px;
   }
 }
 
 @media (max-width: 520px) {
-  .about__card {
-    padding: 28px 20px;
-  }
-
   .about__info {
     grid-template-columns: 1fr;
-    gap: 18px;
   }
 }

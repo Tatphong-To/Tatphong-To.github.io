@@ -56,10 +56,7 @@ export default function Skills() {
   return (
     <section className="skills" id="skills">
       <div className="container">
-        <header className="skills__head">
-          <p className="skills__eyebrow">What I Do</p>
-          <h2 className="skills__title">My Skills</h2>
-        </header>
+        <h2 className="section-title">Skills</h2>
 
         <ul className="skills__grid">
           {skills.map(({ title, icon, description, items }) => (
