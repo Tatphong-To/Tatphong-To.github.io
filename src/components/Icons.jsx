@@ -52,6 +52,18 @@ export const ArrowLeftIcon = () => (
   </Svg>
 )
 
+export const ArrowUpRightIcon = () => (
+  <Svg stroke>
+    <path d="M7 17 17 7M8 7h9v9" />
+  </Svg>
+)
+
+export const ArrowDownIcon = () => (
+  <Svg stroke>
+    <path d="M12 5v14M6 13l6 6 6-6" />
+  </Svg>
+)
+
 export const ExternalIcon = () => (
   <Svg stroke>
     <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
@@ -122,7 +134,55 @@ export const HeartIcon = () => (
   </Svg>
 )
 
+// ----- ไอคอนความสามารถ (About: Strengths & Capabilities) -----
+export const ContainerIcon = () => (
+  <Svg stroke>
+    <path d="M12 3 20 7.5v9L12 21l-8-4.5v-9z" />
+    <path d="M4 7.5 12 12l8-4.5M12 12v9" />
+  </Svg>
+)
+
+export const ServerIcon = () => (
+  <Svg stroke>
+    <rect x="3" y="4" width="18" height="7" rx="1.5" />
+    <rect x="3" y="13" width="18" height="7" rx="1.5" />
+    <path d="M7 7.5h.01M7 16.5h.01M11 7.5h6M11 16.5h6" />
+  </Svg>
+)
+
+export const PipelineIcon = () => (
+  <Svg stroke>
+    <path d="M20 11a8 8 0 0 0-14.3-4.9L4 8" />
+    <path d="M4 4v4h4" />
+    <path d="M4 13a8 8 0 0 0 14.3 4.9L20 16" />
+    <path d="M20 20v-4h-4" />
+  </Svg>
+)
+
+export const TeamIcon = () => (
+  <Svg stroke>
+    <circle cx="9" cy="8" r="3.2" />
+    <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" />
+    <path d="M16 5.2a3 3 0 0 1 0 5.6M18 14.4c1.8.8 3 2.9 3 5.6" />
+  </Svg>
+)
+
+export const BulbIcon = () => (
+  <Svg stroke>
+    <path d="M9 18h6M10 21h4" />
+    <path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2h5c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z" />
+  </Svg>
+)
+
 // map ชื่อ icon ใน data.js -> component
+export const strengthIcons = {
+  container: ContainerIcon,
+  server: ServerIcon,
+  pipeline: PipelineIcon,
+  team: TeamIcon,
+  bulb: BulbIcon,
+}
+
 export const socialIcons = {
   facebook: FacebookIcon,
   github: GithubIcon,
