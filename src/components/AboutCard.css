@@ -1,61 +1,361 @@
+/* ===== About: การ์ดสีหมึกมุมโค้ง ===== */
 .about {
-  padding: var(--section-space) 0;
-  border-bottom: 1px solid #000;
+  --gold: #c9a24f; /* ทองชุดเดียวกับ Projects (~7:1 บนพื้นหมึก) */
+  --on-card: var(--paper); /* ~13:1 บน --ink */
+  --on-card-soft: rgb(239 230 210 / 0.8); /* ~9:1 */
+
+  /* ล่างเว้นน้อย + ไม่มีเส้น: เส้นคั่นลายคลื่น (SectionDivider) ต่อท้ายทำหน้าที่แบ่ง section แทน */
+  padding: var(--section-space) 0 30px;
 }
 
 .about__card {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  grid-template-columns: minmax(0, 1fr) 2px minmax(0, 1fr);
+  column-gap: clamp(28px, 4vw, 56px);
+  padding: clamp(36px, 4.5vw, 60px) clamp(28px, 4.5vw, 64px);
+  border-radius: 16px;
+  color: var(--on-card);
+  background:
+    radial-gradient(ellipse at 20% 0%, rgb(255 240 210 / 0.07), transparent 60%),
+    var(--ink);
+  box-shadow: 0 24px 44px -26px rgb(43 33 24 / 0.75);
+}
+
+/* เส้นแนวตั้งสีทองกั้นกลาง (คอลัมน์กลางของ grid) */
+.about__card::before {
+  content: '';
+  grid-column: 2;
+  grid-row: 1;
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+.about__intro {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+
+.about__info {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+/* หัวข้อบนพื้นมืด: สีกระดาษ (เครื่องประดับใต้หัวข้อสีทองอยู่แล้ว) */
+.about .section-title {
+  margin-bottom: 20px;
+  color: var(--on-card);
 }
 
 .about__headline {
-  margin-bottom: 12px;
-  font-size: 1.25rem;
-  font-weight: 700;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.55;
 }
 
-/* ---------- ข้อมูลติดต่อ ---------- */
+.about__text {
+  max-width: 60ch;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--on-card-soft);
+}
+
+/* ---------- ไอคอน + ป้าย + ค่า ---------- */
 .about__info {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  border-top: 1px solid #000;
+  grid-template-columns: minmax(0, 1fr); /* คอลัมน์เดียว: ค่ายาว (อีเมล การศึกษา) ไม่ถูกตัดกลางคำ */
+  align-content: center;
+  gap: 20px;
+  min-width: 0;
 }
 
 .about__info li {
   display: flex;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 14px;
   min-width: 0;
-  padding: 12px 0;
-  border-bottom: 1px solid #000;
-}
-
-.about__info li.about__wide {
-  grid-column: 1 / -1;
 }
 
 .about__info li > div {
   min-width: 0;
 }
 
+/* ไอคอนในช่องสี่เหลี่ยมมุมโค้งสีกระดาษ */
+.about__icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: var(--on-card);
+  color: var(--ink);
+}
+
+.about__icon svg {
+  width: 20px;
+  height: 20px;
+}
+
 .about__label {
   display: block;
-  font-size: 0.85rem;
+  font-family: var(--display);
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.3;
+  color: var(--gold);
 }
 
 .about__value {
   display: block;
-  overflow-wrap: anywhere;
+  margin-top: 2px;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--on-card);
+  overflow-wrap: break-word;
 }
 
-@media (max-width: 960px) {
+.about__card a:focus-visible {
+  outline-color: var(--gold);
+}
+
+/* ---------- จอแคบ: คอลัมน์เดียว เส้นทองเป็นแนวนอนคั่นกลาง ---------- */
+@media (max-width: 900px) {
   .about__card {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 2px auto;
+    row-gap: 32px;
+  }
+
+  .about__card::before {
+    grid-column: 1;
+    grid-row: 2;
+    width: 72px;
+  }
+
+  .about__intro {
+    grid-row: 1;
+  }
+
+  .about__info {
+    grid-column: 1;
+    grid-row: 3;
   }
 }
 
 @media (max-width: 520px) {
+  .about__card {
+    padding: 32px 22px;
+    border-radius: 14px;
+  }
+
   .about__info {
-    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+/* ===== ของตกแต่งรอบการ์ด: เสาไอโอนิก / กิ่งมะกอก / นกนางแอ่น (SVG นิ่ง ไม่มี filter) ===== */
+.about {
+  overflow-x: clip; /* กันของตกแต่งดันหน้าจอให้เลื่อนแนวนอน */
+}
+
+.about__stage {
+  --col-w: clamp(70px, 6vw, 96px); /* ความกว้างหัวเสา */
+  --col-gap: 30px; /* ระยะจากขอบการ์ดถึงเสา (ติดลบ = ซ่อนหลังการ์ดบางส่วน) */
+  position: relative;
+  margin-inline: auto;
+}
+
+.about__card {
+  position: relative;
+  z-index: 1;
+}
+
+.about__decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ---------- เสา: หัวเสา / ลำเสา (ยืดตามความสูงการ์ด) / ฐานเสา ---------- */
+.acol {
+  position: absolute;
+  top: -44px; /* หัวเสาสูงกว่าขอบบนการ์ดเล็กน้อย (ตรงจุดแขวนกิ่ง) ฐานเสาเสมอขอบล่างการ์ด */
+  bottom: 0;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: var(--col-w);
+}
+
+.acol--left {
+  right: calc(100% + var(--col-gap));
+}
+
+.acol--right {
+  left: calc(100% + var(--col-gap));
+}
+
+.acol svg {
+  flex-shrink: 0;
+  width: 100%;
+  height: auto;
+}
+
+.acol .acol__shaft {
+  flex: 1;
+  width: calc(var(--col-w) * 80 / 120);
+  height: auto;
+  min-height: 0;
+}
+
+.acol__stone {
+  fill: #e3d7bd; /* หินอ่อนโทนกระดาษ เข้มกว่าพื้นเล็กน้อย */
+  stroke: rgb(43 33 24 / 0.35);
+  stroke-width: 1;
+}
+
+.acol__line {
+  fill: none;
+  stroke: rgb(43 33 24 / 0.35);
+  stroke-width: 1;
+}
+
+.acol__flute {
+  stroke: rgb(43 33 24 / 0.2);
+  stroke-width: 1;
+}
+
+/* ---------- กิ่งมะกอก (เขียวมะกอกจาง) ---------- */
+.olive {
+  opacity: 0.32;
+}
+
+.olive__stem {
+  fill: none;
+  stroke: #56633a;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.olive__leaf {
+  fill: #6b7a45;
+}
+
+.olive__fruit {
+  fill: #47522e;
+}
+
+/* เลื้อยขึ้นลำเสา: จากเหนือฐานขึ้นไปราวสองในสามของเสา */
+.acol .acol__vine {
+  position: absolute;
+  bottom: calc(var(--col-w) * 30 / 120);
+  left: 50%;
+  width: calc(var(--col-w) * 0.78);
+  height: auto;
+  translate: -50% 0;
+}
+
+/* ห้อยโค้งจากหัวเสาไปมุมบนการ์ด: จุดต่ำสุดของโค้งแตะขอบบนการ์ดพอดี (ทั้งกิ่งอยู่บนพื้นกระดาษ) */
+.about__swag {
+  --swag-w: calc(var(--col-gap) + var(--col-w) / 2 + 150px);
+  position: absolute;
+  z-index: 2;
+  top: calc(var(--swag-w) * -0.222); /* จุดต่ำสุดอยู่ที่ ~48/70 ของความสูง (สูง = กว้าง x 70/220) */
+  width: var(--swag-w);
+  height: auto;
+}
+
+.about__swag--left {
+  left: calc(-1 * (var(--col-gap) + var(--col-w) / 2));
+}
+
+.about__swag--right {
+  right: calc(-1 * (var(--col-gap) + var(--col-w) / 2));
+  scale: -1 1;
+}
+
+/* ---------- นกนางแอ่น (สไตล์เดียวกับ Skills) ---------- */
+.about__bird {
+  z-index: 2;
+}
+
+.about__bird--1 {
+  top: -58px;
+  right: 44%;
+  width: 46px;
+  height: 23px;
+}
+
+.about__bird--2 {
+  top: -40px;
+  right: 38%;
+  width: 32px;
+  height: 16px;
+  rotate: 8deg;
+  opacity: 0.11;
+}
+
+/* จอ 1200px ขึ้นไป: เสาเต็มต้นในขอบว่าง การ์ดแคบลงพอให้เสาไม่ล้นจอ */
+@media (min-width: 1200px) {
+  .about__stage {
+    width: min(100%, calc(100vw - 2 * (var(--col-w) + var(--col-gap) + 24px)));
+  }
+}
+
+/* จอ 900-1199px: เสาเล็กลง ครึ่งหนึ่งซ่อนหลังการ์ด (การ์ดทึบ จึงไม่ทับข้อความ) */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .about__stage {
+    --col-w: 60px;
+    --col-gap: -30px;
+    margin-inline: 22px;
+  }
+
+  .about__swag {
+    --swag-w: 170px;
+  }
+
+  .about__swag--left {
+    left: -14px;
+  }
+
+  .about__swag--right {
+    right: -14px;
+  }
+}
+
+/* ต่ำกว่า 900px: ไม่มีเสา เหลือกิ่งเล็กที่มุมการ์ด */
+@media (max-width: 899px) {
+  .acol {
+    display: none;
+  }
+
+  .about__swag {
+    --swag-w: 116px;
+  }
+
+  .about__swag--left {
+    left: -8px;
+  }
+
+  .about__swag--right {
+    right: -8px;
+  }
+
+  .about__bird--1 {
+    top: -50px;
+    right: 46%;
+    width: 36px;
+    height: 18px;
+  }
+
+  .about__bird--2 {
+    top: -36px;
+    right: 36%;
+    width: 26px;
+    height: 13px;
   }
 }

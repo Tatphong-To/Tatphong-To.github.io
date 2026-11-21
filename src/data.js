@@ -7,7 +7,7 @@ export const profile = {
   lastName: 'Tongyuang',
   role: 'Full Stack Developer Intern',
   tagline: 'สร้างเว็บและแอปที่ใช้งานได้จริง ตั้งแต่หน้าจอไปจนถึง API และระบบข้อมูล',
-  photo: '/images/profile-placeholder.svg', // TODO: ใส่รูปจริง
+  photo: '/images/profile.png',
   resumeUrl: '/Tatphong_Resume.pdf', // วางไฟล์ที่ public/Tatphong_Resume.pdf
   status: 'เปิดรับฝึกงาน 4–6 เดือน', // ป้ายสถานะใน Hero และ Footer (ใส่ '' เพื่อซ่อน)
   // ===== About Me =====
