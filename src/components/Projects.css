@@ -1,7 +1,13 @@
+/* ===== Projects: ทีละโปรเจกต์ เต็มจอ ===== */
 .projects {
-  padding: var(--section-space) 0;
-  border-bottom: 1px solid #000;
-  overflow: hidden; /* การ์ดข้างโผล่จากขอบจอ */
+  /* ใต้เส้นคั่นเมเนอร์: ระยะเท่ากับเหนือเส้น (ขอบล่างแผ่นกระดาษ Skills → เส้น) */
+  padding: 36px 0 0;
+}
+
+@media (max-width: 899px) {
+  .projects {
+    padding-top: 30px;
+  }
 }
 
 .projects__head {
@@ -9,202 +15,694 @@
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: var(--gap);
+  gap: 12px 24px;
+  margin-bottom: 24px;
 }
 
 .projects__head .projects__title {
   margin: 0;
 }
 
-/* ---------- Carousel (กลไกเลื่อนการ์ด) ---------- */
-.carousel {
-  --w: min(760px, 62vw);
-  --ratio: 1.6;
-  --h: calc(var(--w) / var(--ratio));
-  --step: 0.94;
-  --side-scale: 0.82;
+/* ---------- แผงสีเต็มความกว้างจอ (ขอบบนโค้งแบบซุ้ม) ---------- */
+.pj {
+  --ease: cubic-bezier(0.7, 0, 0.3, 1);
+  --dur: 0.75s;
+  --content-w: min(88%, 2200px); /* เนื้อหาใช้ ~85-90% ของเวที */
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 50% 50% 0 0 / clamp(72px, 7vw, 150px) clamp(72px, 7vw, 150px) 0 0;
+  color: var(--paper);
   outline: none;
 }
 
-.carousel:focus-visible .slide.is-active {
-  outline: 2px solid #000;
-  outline-offset: 4px;
+.pj:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -10px;
 }
 
-.carousel__stage {
+/* โฟกัสบนพื้นสี: ใช้สีกระดาษให้เห็นชัด */
+.pj__layout :focus-visible {
+  outline-color: var(--paper);
+}
+
+.pj__bgs {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.pj__bg {
+  position: absolute;
+  inset: 0;
+}
+
+/* wipe: แถบสีเก่าเลื่อนออก, แถบสีใหม่ขยายเข้า (ทิศตามการเลื่อน) */
+.pj__bg.is-out {
+  animation: pj-bg-out var(--dur) var(--ease) forwards;
+}
+
+.pj__bg.is-in {
+  animation: pj-bg-in var(--dur) var(--ease);
+}
+
+.pj[data-dir='-1'] .pj__bg.is-out {
+  animation-name: pj-bg-out-rev;
+}
+
+.pj[data-dir='-1'] .pj__bg.is-in {
+  animation-name: pj-bg-in-rev;
+}
+
+@keyframes pj-bg-out {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes pj-bg-in {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes pj-bg-out-rev {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pj-bg-in-rev {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ---------- ของตกแต่งในที่ว่างสองข้าง (จอกว้าง, ความทึบ <= 12%) ---------- */
+.pj__side {
+  --side: calc((100% - var(--content-w)) / 2); /* ความกว้างที่ว่างแต่ละข้าง */
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: none;
+  pointer-events: none;
+}
+
+@media (min-width: 1200px) {
+  .pj__side {
+    display: block;
+  }
+}
+
+/* แถบลายกรีกแนวตั้ง */
+.pj__side-band {
+  position: absolute;
+  top: 18%;
+  bottom: 22%;
+  width: clamp(18px, 1.4vw, 34px);
+  opacity: 0.12;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='20' viewBox='0 0 24 20'%3E%3Cpath d='M1 0V20M23 0V20M20 0H5V16H17V8H9' fill='none' stroke='%23efe6d2' stroke-width='1.4'/%3E%3C/svg%3E") repeat-y center top / 100% auto;
+}
+
+.pj__side-band--left {
+  left: calc(var(--side) * 0.22);
+}
+
+.pj__side-band--right {
+  right: calc(var(--side) * 0.22);
+}
+
+/* กิ่งลอเรลสีทองจาง */
+.pj__side-laurel {
+  position: absolute;
+  bottom: 18%;
+  width: min(150px, calc(var(--side) * 0.5));
+  height: auto;
+  opacity: 0.12;
+}
+
+.pj__side-laurel--left {
+  left: calc(var(--side) * 0.42);
+}
+
+.pj__side-laurel--right {
+  right: calc(var(--side) * 0.42);
+  transform: scaleX(-1);
+}
+
+/* นกบินเส้นสีกระดาษ */
+.pj__side-bird {
+  position: absolute;
+  width: min(64px, calc(var(--side) * 0.4));
+  height: auto;
+  fill: none;
+  stroke: var(--paper);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  opacity: 0.12;
+}
+
+.pj__side-bird--1 {
+  top: 22%;
+  left: calc(var(--side) * 0.45);
+}
+
+.pj__side-bird--2 {
+  top: 28%;
+  right: calc(var(--side) * 0.4);
+  transform: scaleX(-1) rotate(-6deg);
+}
+
+/* ---------- เลย์เอาต์: ฉากซ้าย | แถวพับได้ขวา ---------- */
+.pj__layout {
   position: relative;
-  height: var(--h);
-  touch-action: pan-y;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(300px, 26vw, 640px);
+  align-items: center;
+  gap: clamp(28px, 3.5vw, 120px);
+  width: var(--content-w);
+  margin: 0 auto;
+  padding: clamp(72px, 7vw, 140px) 0 clamp(40px, 4vw, 90px);
+}
+
+/* ฉาก: กล่องที่มีความสูงชัดเจน ให้ลูกใช้ cqi/cqh อ้างอิงได้ */
+.pj__stage {
+  position: relative;
+  min-width: 0;
+  height: clamp(360px, min(64vh, 36vw), 820px);
+  overflow: clip; /* คำยักษ์/ภาพไม่ล้นนอกฉาก */
+  container-type: size;
+  touch-action: pan-y; /* ปัดแนวนอนเปลี่ยนโปรเจกต์, แนวตั้งเลื่อนหน้า */
   user-select: none;
 }
 
-.slide {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  z-index: 2;
-  width: var(--w);
-  height: var(--h);
-  overflow: hidden;
-  border: 1px solid #000;
-  background: #fff;
-  transform: translateX(calc(-50% + var(--o) * var(--w) * var(--step))) scale(var(--side-scale));
-  opacity: 0.4;
-  cursor: pointer;
-  transition: transform 0.4s ease, opacity 0.4s ease;
-}
-
-.slide.is-active {
-  z-index: 3;
-  transform: translateX(-50%) scale(1);
-  opacity: 1;
-  cursor: default;
-}
-
-/* การ์ดที่ไกลเกิน 1 ตำแหน่ง: ซ่อนก่อน แล้วค่อยย้ายตำแหน่ง */
-.slide.is-hidden {
-  z-index: 1;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease, transform 0s linear 0.2s;
-}
-
-.slide img {
+/* ฉาก: คำยักษ์ด้านบน ภาพด้านล่าง ทับคำเล็กน้อย */
+.pj__scene {
+  --word-size: 96px; /* ค่าเริ่มต้นก่อน JS วัด */
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top;
-  pointer-events: none;
-}
-
-.slide__shade {
-  display: none;
-}
-
-/* เนื้อหาการ์ด: กล่องขาวด้านล่าง */
-.slide__content {
-  position: absolute;
-  inset: auto 0 0 0;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 16px;
-  background: #fff;
-  border-top: 1px solid #000;
+  align-items: center;
+  justify-content: center;
+  padding-top: clamp(28px, 8cqh, 80px); /* ที่ให้เลขโรมันเหนือคำ */
 }
 
-.slide__title {
-  font-size: 1.25rem;
+.pj__heading {
+  position: relative;
+  z-index: 0;
+  max-width: 92%;
+  font-family: var(--display);
+  font-size: var(--word-size);
+  line-height: 1;
+  text-align: center;
 }
 
-.slide__tags {
+.pj__word-text {
+  display: inline-block;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: rgb(239 230 210 / 0.92);
+}
+
+/* ชื่อยาวมาก: ตัด 2 บรรทัดสมดุลแทนการล้น */
+.pj__scene.is-wrapping .pj__word-text {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+/* เลขโรมัน: ชิดมุมซ้ายบนของคำ ขนาดสัมพันธ์กับคำ */
+.pj__numeral {
+  position: absolute;
+  bottom: calc(100% - 0.08em);
+  left: 0.02em;
+  font-size: 0.4em;
+  line-height: 1;
+  color: var(--paper);
+  opacity: 0.6;
+}
+
+/* ภาพ: ทับครึ่งล่างของกล่องคำแค่ 0.4em (บังตัวอักษร ~20% ของความสูงตัวอักษร) */
+.pj__figure {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: min(60cqi, calc((92cqh - var(--word-size) * 0.6) * 1.4545));
+  aspect-ratio: 16 / 11;
+  margin-top: calc(var(--word-size) * -0.4);
+}
+
+.pj__frame {
+  position: absolute;
+  inset: 0;
+  padding: clamp(8px, 0.7vw, 14px);
+  border-radius: 50% 50% 6px 6px / 34% 34% 6px 6px;
+  background: var(--paper);
+  box-shadow: 0 28px 50px -20px rgb(0 0 0 / 0.55);
+}
+
+/* พื้นรองภาพทรงซุ้ม: สีจากมุมของรูป (ตั้งใน JS), ค่าเริ่มต้นสีหมึก */
+.pj__mat {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  container-type: size;
+  border-radius: 50% 50% 3px 3px / 33% 33% 3px 3px;
+  background: var(--ink);
+}
+
+/* กล่องภาพ: ข้าง-ล่างเว้น 13% ของความกว้างเท่ากัน, บนเว้นพ้นโค้งซุ้ม
+   ภาพ contain + กึ่งกลาง จึงไม่ยืดและไม่ถูกตัด ไม่ว่าสัดส่วนรูปจะเป็นแบบไหน */
+.pj__mat img {
+  position: absolute;
+  top: 13cqh;
+  right: 13cqi;
+  bottom: 13cqi;
+  left: 13cqi;
+  width: calc(100% - 26cqi);
+  height: calc(100% - 13cqh - 13cqi);
+  object-fit: contain;
+  object-position: center;
+  filter: none; /* สีจริงของภาพ ไม่ใช้ซีเปีย */
+}
+
+/* ใบลอเรลข้างภาพ */
+.pj__laurel {
+  position: absolute;
+  bottom: -8%;
+  width: 18%;
+  height: auto;
+}
+
+.pj__laurel--left {
+  left: -15%;
+}
+
+.pj__laurel--right {
+  right: -15%;
+  transform: scaleX(-1);
+}
+
+/* ชิ้นโมเสกลอย */
+.pj__tile {
+  position: absolute;
+  width: var(--s);
+  height: var(--s);
+  border-radius: 2px;
+  transform: translate(-50%, -50%) rotate(var(--r));
+  box-shadow: 0 4px 8px rgb(0 0 0 / 0.25);
+}
+
+/* ---------- ลูกศรสองข้างภาพโปรเจกต์ ---------- */
+.pj__arrow {
+  position: absolute;
+  top: 60%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: clamp(48px, 3.8vw, 80px);
+  height: clamp(48px, 3.8vw, 80px);
+  padding: 0;
+  border: 1.5px solid rgb(239 230 210 / 0.85);
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.14);
+  color: var(--paper);
+  transform: translateY(-50%);
+  transition: background 0.2s, color 0.2s;
+}
+
+.pj__arrow svg {
+  width: 40%;
+  height: 40%;
+}
+
+.pj__arrow--prev {
+  left: 0;
+}
+
+.pj__arrow--next {
+  right: 0;
+}
+
+.pj__arrow:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ---------- การเปลี่ยนฉาก (translate/opacity เท่านั้น) ---------- */
+.pj__scene.is-entering .pj__figure {
+  animation: pj-fig-in var(--dur) var(--ease) both;
+}
+
+.pj__scene.is-leaving .pj__figure {
+  animation: pj-fig-out var(--dur) var(--ease) forwards;
+}
+
+.pj__scene.is-entering .pj__heading {
+  animation: pj-type-in var(--dur) var(--ease) both;
+}
+
+.pj__scene.is-leaving .pj__heading {
+  animation: pj-type-out calc(var(--dur) * 0.6) var(--ease) forwards;
+}
+
+@keyframes pj-fig-in {
+  from {
+    translate: calc(160px * var(--dir)) 0;
+    opacity: 0;
+  }
+
+  to {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
+@keyframes pj-fig-out {
+  to {
+    translate: calc(-160px * var(--dir)) 0;
+    opacity: 0;
+  }
+}
+
+@keyframes pj-type-in {
+  from {
+    translate: 0 28px;
+    opacity: 0;
+  }
+
+  to {
+    translate: 0 0;
+  }
+}
+
+@keyframes pj-type-out {
+  to {
+    translate: 0 -28px;
+    opacity: 0;
+  }
+}
+
+/* ---------- แถวพับได้: อ่านสบาย ~40-60 ตัวอักษร/บรรทัด ไม่ล้นกล่อง ---------- */
+.pj__aside {
+  align-self: center;
+  min-width: 0;
+  max-width: 52ch;
+  /* >= 16px ที่ 1440 ขึ้นไป และโตตามจอ */
+  font-size: clamp(1rem, 0.6rem + 0.5vw, 1.45rem);
+  overflow-wrap: anywhere; /* ข้อความไทยยาว / URL ตัดบรรทัดได้ */
+  animation: pj-fade 0.5s ease both;
+}
+
+.pj.is-animating .pj__aside {
+  animation-delay: 0.2s;
+}
+
+@keyframes pj-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.pj__title {
+  max-width: 24ch;
+  margin-bottom: clamp(16px, 1.4vw, 32px);
+  font-size: clamp(1.45rem, 0.9rem + 0.9vw, 2.6rem);
+  line-height: 1.3;
+}
+
+.pj__accordion {
+  border-bottom: 1px solid rgb(239 230 210 / 0.35);
+}
+
+.pj__row {
+  border-top: 1px solid rgb(239 230 210 / 0.35);
+}
+
+.pj__row h4 {
+  margin: 0;
+}
+
+.pj__row button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: clamp(48px, 3.8vw, 72px);
+  padding: 12px 4px 12px 0; /* เผื่อเครื่องหมาย + ตอนหมุนเป็น × ไม่ให้เกินขอบ */
+  border: 0;
+  background: none;
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: clamp(1.05rem, 0.7rem + 0.55vw, 1.6rem);
+  letter-spacing: 0.04em;
+  text-align: left;
+}
+
+/* เครื่องหมาย + (หมุนเป็น × เมื่อเปิด) */
+.pj__plus {
+  position: relative;
+  width: clamp(14px, 1.1vw, 22px);
+  height: clamp(14px, 1.1vw, 22px);
+  flex-shrink: 0;
+  transition: transform 0.3s var(--ease);
+}
+
+.pj__plus::before,
+.pj__plus::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1.6px;
+  background: currentColor;
+  transform: translateY(-50%);
+}
+
+.pj__plus::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.pj__row.is-open .pj__plus {
+  transform: rotate(45deg);
+}
+
+.pj__panel-body {
+  padding-bottom: 18px;
+  color: rgb(239 230 210 / 0.92);
+}
+
+.pj__panel-body p {
+  max-width: 52ch;
+}
+
+.pj__tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
 
-.slide__tags li {
-  padding: 0 8px;
-  border: 1px solid #000;
-  font-size: 0.8rem;
+.pj__tags li {
+  padding: 2px 10px;
+  border: 1px solid rgb(239 230 210 / 0.5);
+  font-size: 0.85em;
 }
 
-.slide__actions {
-  display: flex;
-  align-items: center;
+.pj__links {
+  display: grid;
   gap: 8px;
 }
 
-.slide__more {
-  padding: 6px 12px;
-  border: 1px solid #000;
-  text-decoration: none;
+.pj__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--paper);
 }
 
-.slide__repo {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid #000;
+.pj__links svg {
+  width: 1em;
+  height: 1em;
 }
 
-.slide__repo svg {
-  width: 18px;
-  height: 18px;
-}
-
-/* ---------- ลูกศร + ตัวบอกตำแหน่ง ---------- */
-.carousel__bar {
+/* ---------- แถบเหรียญด้านล่าง (สีกระดาษ ขอบโค้ง) ---------- */
+.pj__band {
+  position: relative;
   display: flex;
   justify-content: center;
-  margin-top: var(--gap);
+  padding: clamp(30px, 2.6vw, 50px) 16px clamp(26px, 2.2vw, 44px);
+  border-radius: 50% 50% 0 0 / clamp(40px, 4vw, 90px) clamp(40px, 4vw, 90px) 0 0;
+  background: var(--paper);
+  color: var(--ink);
 }
 
-.carousel__arrow {
-  position: absolute;
-  top: calc(var(--h) / 2);
-  z-index: 4;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  transform: translateY(-50%);
-}
-
-.carousel__arrow--prev {
-  left: max(12px, calc(50% - var(--w) / 2 - 64px));
-}
-
-.carousel__arrow--next {
-  right: max(12px, calc(50% - var(--w) / 2 - 64px));
-}
-
-.carousel__dots {
+.pj__coins {
   display: flex;
   align-items: center;
-  gap: 8px;
 }
 
-.carousel__dots button {
-  width: 12px;
-  height: 12px;
-  padding: 0;
+.pj__coins li {
+  display: flex;
+  align-items: center;
 }
 
-.carousel__dots button.is-active {
-  background: #000;
+.pj__join {
+  margin: 0 clamp(10px, 0.9vw, 18px);
+  font-family: var(--display);
+  font-size: clamp(1.2rem, 1.4vw, 1.8rem);
+  color: var(--ink-soft);
 }
 
-@media (max-width: 900px) {
-  .carousel {
-    --w: 74vw;
-    --ratio: 1.25;
+.pj__coin {
+  position: relative;
+  width: clamp(58px, 4.6vw, 88px);
+  height: clamp(58px, 4.6vw, 88px);
+  padding: 3px;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  transition: transform 0.25s var(--ease), border-color 0.25s, box-shadow 0.25s;
+}
+
+.pj__coin img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: none;
+}
+
+.pj__coin-num {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  padding: 0 5px;
+  border-radius: 6px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: clamp(0.7rem, 0.75vw, 0.95rem);
+  line-height: 1.5;
+  transform: translateX(-50%);
+}
+
+.pj__coin:hover {
+  transform: translateY(-2px);
+}
+
+.pj__coin[aria-current='true'] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--paper), 0 0 0 4.5px var(--accent);
+  transform: scale(1.1);
+}
+
+.pj__coin[aria-current='true'] .pj__coin-num {
+  background: var(--accent);
+}
+
+/* ---------- แท็บเล็ต: คอลัมน์ขวาแคบลง ---------- */
+@media (max-width: 1100px) {
+  .pj {
+    --content-w: calc(100% - 48px);
   }
 }
 
-@media (max-width: 640px) {
-  .carousel {
-    --w: 85vw;
-    --ratio: 0.78;
-    --step: 0.96;
-    --side-scale: 0.86;
+/* ---------- มือถือ: แถวพับได้อยู่ใต้ภาพ ---------- */
+@media (max-width: 760px) {
+  .pj {
+    --content-w: calc(100% - 32px);
+    border-radius: 50% 50% 0 0 / 36px 36px 0 0;
   }
 
-  .carousel__bar {
-    align-items: center;
-    justify-content: space-between;
-    width: var(--w);
-    margin: var(--gap) auto 0;
+  .pj__layout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 48px 0 28px;
   }
 
-  .carousel__arrow {
-    position: static;
-    transform: none;
+  .pj__aside {
+    max-width: none;
+    font-size: 1rem;
+  }
+
+  .pj__stage {
+    height: clamp(280px, 88vw, 380px);
+  }
+
+  .pj__figure {
+    width: min(66cqi, calc((92cqh - var(--word-size) * 0.6) * 1.4545));
+  }
+
+  .pj__laurel {
+    width: 16%;
+  }
+
+  .pj__laurel--left {
+    left: -12%;
+  }
+
+  .pj__laurel--right {
+    right: -12%;
+  }
+
+  .pj__title {
+    font-size: 1.3rem;
+  }
+
+  /* ลูกศรอยู่ขอบฉาก ระดับกลางภาพ ไม่บังภาพ */
+  .pj__arrow {
+    top: 62%;
+    width: 44px;
+    height: 44px;
+  }
+
+  .pj__band {
+    padding: 24px 8px 22px;
+    border-radius: 50% 50% 0 0 / 28px 28px 0 0;
+  }
+
+  .pj__coin {
+    width: 50px;
+    height: 50px;
+  }
+
+  .pj__join {
+    margin: 0 8px;
+    font-size: 1rem;
+  }
+}
+
+/* ---------- ลดการเคลื่อนไหว: สลับทันที ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .pj__bg.is-out,
+  .pj__scene.is-leaving {
+    display: none;
+  }
+
+  .pj__bg.is-in,
+  .pj__scene.is-entering .pj__figure,
+  .pj__scene.is-entering .pj__heading,
+  .pj__aside {
+    animation: none;
+  }
+
+  .pj__plus,
+  .pj__coin,
+  .pj__arrow {
+    transition: none;
   }
 }
