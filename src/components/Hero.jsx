@@ -1,17 +1,26 @@
 import { profile, hasUrl } from '../data.js'
-import { ArrowRightIcon, DownloadIcon, MailIcon, socialIcons } from './Icons.jsx'
+import { ArrowRightIcon, ArrowDownIcon, DownloadIcon, MailIcon, socialIcons } from './Icons.jsx'
+import ThaiPhrases from './ThaiPhrases.jsx'
 import './Hero.css'
 
 // Summary: ใส่ข้อความตรงนี้ ('' = ไม่แสดงอะไร) จะแสดงใต้ตำแหน่งงาน
 const SUMMARY = ''
 
-// เครดิตภาพมือ (สาธารณสมบัติ)
-const HANDS_SOURCE = 'https://commons.wikimedia.org/wiki/File:Michelangelo_-_Creation_of_Adam_(cropped).jpg'
+// แถบความถนัดด้านล่าง Hero
+const FOCUS = ['Backend Development', 'Web Scraping', 'Data Pipeline', 'AI & LLM', 'DevOps & CI/CD']
 
+// จำนวนชุดที่ซ้ำใน marquee: ต้องกว้างรวมเกินความกว้างแถบ + 1 ชุด เสมอ (4 ชุด ~4,400px พอสำหรับจอกว้าง)
+const MARQUEE_COPIES = 4
+
+// ภาพพื้นหลัง: Claude Lorrain, A Seaport at Sunrise (1674) สาธารณสมบัติ ที่มาและรายละเอียดอยู่ใน CREDITS.md
+
+// ===== Hero: ปกเรซูเม่แบบนิตยสาร ชายฝั่งเมดิเตอร์เรเนียนสมัยโรมัน =====
+// ซ้าย: ชื่อ (เด่นสุด) + ตำแหน่ง + คำแนะนำ + ปุ่ม | ขวา: ภาพทะเล/อาคารโรมัน จางเข้าพื้นครีม + รูปจริง (PNG พื้นโปร่งใส)
+// ล่าง: แถบความถนัด
 export default function Hero() {
   const { firstName, lastName, role, tagline, photo, resumeUrl, email } = profile
 
-  // "find me on": เฉพาะช่องทางที่มีใน data.js (social ที่มีลิงก์จริง + อีเมล)
+  // ช่องทางติดต่อ: เฉพาะที่มีใน data.js (social ที่มีลิงก์จริง + อีเมล)
   const channels = [
     ...profile.socials.filter((s) => hasUrl(s.url)).map((s) => ({ ...s, Icon: socialIcons[s.icon], external: true })),
     ...(email?.trim() ? [{ label: 'Email', url: `mailto:${email}`, Icon: MailIcon }] : []),
@@ -19,49 +28,37 @@ export default function Hero() {
 
   return (
     <section className="hero" id="home">
-      {/* ลายกรีกเมเนอร์เป็นวงซ้อนจาง ๆ (ตกแต่ง) */}
-      <div className="hero__rings" aria-hidden="true" />
-
-      {/* มือจาก The Creation of Adam (ตกแต่ง ซ่อนบนจอเล็ก) */}
-      <img
-        className="hero__hand hero__hand--god"
-        src="/images/hands/god-hand.webp"
-        alt=""
-        aria-hidden="true"
-        width="760"
-        height="342"
-      />
-      <img
-        className="hero__hand hero__hand--adam"
-        src="/images/hands/adam-hand.webp"
-        alt=""
-        aria-hidden="true"
-        width="715"
-        height="317"
-      />
-
-      <div className="container hero__inner">
+      <div className="hero__inner">
         <div className="hero__text">
           <p className="hero__hello">Hello, I&rsquo;m</p>
           <h1 className="hero__name">
-            <span>{firstName}</span> <span>{lastName}</span>
+            <span className="hero__first">{firstName}</span>{' '}
+            <span className="hero__last">{lastName}</span>
           </h1>
           <p className="hero__role">{role}</p>
           {SUMMARY && <p className="hero__summary">{SUMMARY}</p>}
-          {tagline && <p className="hero__tagline">{tagline}</p>}
-        </div>
+          {tagline && (
+            <p className="hero__tagline">
+              <ThaiPhrases text={tagline} />
+            </p>
+          )}
 
-        {/* วงกลมทองเก่า + วงลายเมเนอร์ รูปคน (PNG พื้นโปร่งใส) ยื่นเกินวงด้านล่าง */}
-        <figure className="hero__portrait">
-          <span className="hero__disc" aria-hidden="true" />
-          <img src={photo} alt={`${firstName} ${lastName}`} width="500" height="631" />
-        </figure>
+          <div className="hero__actions">
+            <a href="#projects" className="hero__cta">
+              View Projects
+              <ArrowRightIcon />
+            </a>
+            <a href="#about" className="hero__more">
+              <span className="hero__more-icon" aria-hidden="true">
+                <ArrowDownIcon />
+              </span>
+              Discover More
+            </a>
+          </div>
 
-        <div className="hero__side">
-          {channels.length > 0 && (
-            <div className="hero__find">
-              <span>Find me on</span>
-              <ul>
+          <div className="hero__links">
+            {channels.length > 0 && (
+              <ul className="hero__social" aria-label="ช่องทางติดต่อ">
                 {channels.map(({ label, url, Icon, external }) => (
                   <li key={label}>
                     <a
@@ -74,28 +71,62 @@ export default function Hero() {
                   </li>
                 ))}
               </ul>
-            </div>
-          )}
-
-          <a href="#projects" className="hero__pill hero__pill--primary">
-            My Project
-            <span className="hero__go" aria-hidden="true">
-              <ArrowRightIcon />
-            </span>
-          </a>
-          <a href={resumeUrl} className="hero__pill" download>
-            Download Resume
-            <DownloadIcon />
-          </a>
+            )}
+            <a href={resumeUrl} className="hero__resume" download>
+              <DownloadIcon />
+              Download Resume
+            </a>
+          </div>
         </div>
       </div>
 
-      <p className="hero__credit">
-        ภาพมือ: Michelangelo, The Creation of Adam (ราว ค.ศ. 1512), สาธารณสมบัติ ผ่าน{' '}
-        <a href={HANDS_SOURCE} target="_blank" rel="noreferrer">
-          Wikimedia Commons
-        </a>
-      </p>
+      {/* ภาพ: ฉากท่าเรือ + รูปจริง (desktop อยู่ขวาหลังข้อความ / มือถืออยู่ใต้ข้อความ) */}
+      <div className="hero__visual">
+        {/* ฉากหลัง: ภาพวาดท่าเรือโรมันยามเช้า จางไปทางซ้ายให้ข้อความอ่านง่าย */}
+        <div className="hero__scene" aria-hidden="true">
+          <img
+            src="/images/hero/seaport-sunrise-2400.webp"
+            srcSet="/images/hero/seaport-sunrise-1200.webp 1200w, /images/hero/seaport-sunrise-2400.webp 2400w"
+            sizes="(max-width: 760px) 100vw, 64vw"
+            alt=""
+            width="2400"
+            height="1755"
+            fetchPriority="high"
+          />
+        </div>
+        {/* รูปจริง: ยืนบนเส้นแถบความถนัด ขอบไหล่ซ้าย-ขวาและล่างจางเข้าฉาก */}
+        <figure className="hero__portrait">
+          <img src={photo} alt={`${firstName} ${lastName}`} width="500" height="631" />
+        </figure>
+      </div>
+
+      {/* ตัวบอกให้เลื่อนลง (ตกแต่ง) */}
+      <span className="hero__scroll" aria-hidden="true">
+        Scroll
+      </span>
+
+      <div className="hero__strip">
+        <svg className="hero__star" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          <path d="M10 0C10.8 6.2 13.8 9.2 20 10C13.8 10.8 10.8 13.8 10 20C9.2 13.8 6.2 10.8 0 10C6.2 9.2 9.2 6.2 10 0Z" />
+        </svg>
+        {/* marquee วนไม่สิ้นสุด: ชุดเดียวกัน MARQUEE_COPIES ชุด เลื่อนซ้ายทีละ 1 ชุดแล้ววนใหม่ (ตำแหน่งเริ่ม = ตำแหน่งจบ จึงไม่กระตุก)
+            ชุดแรกเท่านั้นที่ screen reader อ่าน ชุดที่เหลือเป็นสำเนา aria-hidden */}
+        <div className="hero__marquee">
+          <div className="hero__track" style={{ '--copies': MARQUEE_COPIES }}>
+            {Array.from({ length: MARQUEE_COPIES }, (_, copy) => (
+              <ul
+                key={copy}
+                className={`hero__focus${copy ? ' hero__focus--dup' : ''}`}
+                {...(copy ? { 'aria-hidden': true } : { 'aria-label': 'ความถนัด' })}
+              >
+                {FOCUS.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        </div>
+      </div>
     </section>
   )
 }

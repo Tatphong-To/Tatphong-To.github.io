@@ -1,343 +1,651 @@
-/* ===== Hero: ข้อความซ้าย | วงกลมทองเก่า + รูป | ช่องทางติดต่อ + ปุ่ม ===== */
+/* ===== Hero: ปกเรซูเม่แบบนิตยสาร ชายฝั่งเมดิเตอร์เรเนียนสมัยโรมัน =====
+   desktop: ข้อความซ้าย | ฉากท่าเรือ + รูปจริงด้านขวา (ฉากจางเข้าพื้นครีมทางซ้าย) | แถบความถนัดด้านล่าง
+   พื้น: โปร่งใส ใช้กระดาษของทั้งหน้า (--color-paper + เนื้อกระดาษจาก body) จึงต่อเนื่องกับ section อื่น */
 .hero {
-  --gold-disc: #c9a24f;
+  --cream: var(--color-paper); /* แสง/หมอกที่จางเข้าพื้นใช้สีเดียวกับพื้นกระดาษ */
+  --choc: #30231b;
+  --choc-soft: #5b4a3c; /* ~7:1 บนครีม */
+  --burg: #843a2c;
+  --burg-dark: #6a2d22;
+  --gold: #b18a45;
+  --pad: clamp(16px, 7vw, 128px); /* ขอบซ้าย-ขวาแบบกว้าง (ไม่ใช้ container 1120) */
+  --strip-h: 72px; /* ความสูงแถบความถนัด: รูปยืนเหนือเส้นนี้ */
+
   position: relative;
-  isolation: isolate; /* ให้ลาย/มือ (z-index -1) อยู่หลังเนื้อหาแต่อยู่บนพื้นกระดาษ */
+  isolation: isolate;
   overflow: hidden;
-  padding: clamp(40px, 5vw, 72px) 0 0; /* ล่าง 0: รูปคนยืนบนเส้นคั่นใต้ Hero */
-  border-bottom: 1px solid var(--rule);
-}
-
-/* ---------- ลายเมเนอร์วงซ้อน (ความทึบ 7%) ---------- */
-.hero__rings {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: -1;
-  width: min(1100px, 160vw);
-  aspect-ratio: 1;
-  background: url('/images/meander-rings.svg') center / contain no-repeat;
-  opacity: 0.07;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
-/* ---------- มือ (multiply ลงบนกระดาษ ขอบละลายด้วย mask) ---------- */
-.hero__hand {
-  position: absolute;
-  z-index: -1;
-  width: clamp(180px, 15vw, 280px);
-  height: auto;
-  filter: none;
-  mix-blend-mode: multiply;
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.hero__hand--god {
-  top: 8px;
-  right: -36px; /* อยู่ในขอบว่างขวาของจอ ไม่ทับปุ่ม */
-  -webkit-mask-image: radial-gradient(ellipse 56% 50% at 42% 60%, #000 30%, transparent 92%);
-  mask-image: radial-gradient(ellipse 56% 50% at 42% 60%, #000 30%, transparent 92%);
-}
-
-.hero__hand--adam {
-  bottom: 36px;
-  left: -36px; /* อยู่ในขอบว่างซ้ายของจอ ไม่ทับข้อความ */
-  -webkit-mask-image: radial-gradient(ellipse 56% 50% at 62% 56%, #000 30%, transparent 92%);
-  mask-image: radial-gradient(ellipse 56% 50% at 62% 56%, #000 30%, transparent 92%);
-}
-
-/* ---------- เลย์เอาต์สามช่อง ---------- */
-.hero__inner {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.95fr) minmax(250px, 0.6fr);
-  align-items: center;
-  column-gap: clamp(16px, 2.5vw, 40px);
+  grid-template-columns: minmax(0, 1fr); /* คอลัมน์ไม่ขยายตามราง marquee */
+  grid-template-rows: 1fr auto;
+  min-height: clamp(640px, calc(100svh - var(--nav-h)), 900px);
+  color: var(--choc);
+}
+
+/* ---------- ภาพ: ฉาก + รูป ---------- */
+.hero__visual {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ฉากท่าเรือ: ฝั่งขวา จางเข้าพื้นครีมทางซ้าย และจางลงล่างก่อนถึงแถบความถนัด */
+.hero__scene {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 66%;
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.3) 20%, rgb(0 0 0 / 0.85) 42%, #000 58%),
+    linear-gradient(180deg, transparent 0%, #000 24%, #000 58%, transparent 86%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.3) 20%, rgb(0 0 0 / 0.85) 42%, #000 58%),
+    linear-gradient(180deg, transparent 0%, #000 24%, #000 58%, transparent 86%);
+  mask-composite: intersect;
+}
+
+/* โทนอุ่นจาง หมอกแดด: ลดความอิ่มสีและความเข้มของภาพวาดให้เข้ากับพื้นครีม */
+.hero__scene img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 78% 42%;
+  filter: sepia(0.24) saturate(0.85) brightness(1.14) contrast(0.88);
+}
+
+/* หมอกครีมบาง ๆ ทับฉาก */
+.hero__scene::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--color-paper) 16%, transparent);
+}
+
+/* แสงครีมนุ่มหลังลำตัว: ฉากด้านล่างไม่โผล่ทะลุเสื้อตรงที่รูปจางลง */
+.hero__visual::after {
+  content: '';
+  position: absolute;
+  bottom: var(--strip-h);
+  left: 69%;
+  width: min(62%, 860px);
+  height: 46%;
+  background: radial-gradient(ellipse 50% 60% at 50% 100%, color-mix(in srgb, var(--color-paper) 95%, transparent), color-mix(in srgb, var(--color-paper) 60%, transparent) 55%, transparent 100%);
+  translate: -50% 0;
+}
+
+/* รูปจริง (PNG พื้นโปร่งใส): ยืนเหนือแถบความถนัด ไหล่ซ้าย-ขวาและขอบล่างจางเข้าฉาก */
+.hero__portrait {
+  position: absolute;
+  bottom: var(--strip-h);
+  left: 69%;
+  z-index: 1;
+  height: min(78%, 660px);
+  aspect-ratio: 500 / 631;
+  margin: 0;
+  translate: -50% 0;
+  -webkit-mask-image:
+    linear-gradient(180deg, #000 84%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(180deg, #000 84%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  mask-composite: intersect;
+}
+
+.hero__portrait img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  object-position: bottom;
+  filter: none;
 }
 
 /* ---------- ข้อความ ---------- */
-.hero__text {
+.hero__inner {
   position: relative;
-  z-index: 1; /* ใต้รูปคน (ตามดีไซน์ คนทับชื่อได้เล็กน้อย) */
-  container-type: inline-size;
-  padding-bottom: clamp(24px, 5vw, 72px);
+  z-index: 1;
+  align-self: center;
+  padding: clamp(40px, 6vh, 72px) var(--pad) 28px;
 }
 
+.hero__text {
+  max-width: min(50vw, 680px);
+}
+
+/* บทนำ: Bodoni ตัวเอียง */
 .hero__hello {
-  font-family: var(--display);
-  font-size: clamp(1.6rem, 3vw, 2.8rem);
+  font-family: 'Bodoni Moda', 'Taviraj', Georgia, serif;
+  font-size: clamp(2rem, 3.3vw, 3.5rem);
+  font-style: italic;
   font-weight: 400;
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' 24;
   line-height: 1.1;
-  color: var(--ink-soft);
+  color: var(--choc);
 }
 
-/* ชื่อ: Cinzel หนา สองบรรทัด ขนาดตามความกว้างช่อง (คำยาวสุดไม่ล้นช่อง) */
+/* ชื่อ: เด่นสุด Bodoni ตัวเอียงตัวพิมพ์ใหญ่ ชื่อตัวทึบ นามสกุลเส้นขอบ */
 .hero__name {
-  margin: 6px 0 12px;
-  font-size: clamp(2.4rem, 15.4cqi, 5.4rem);
-  font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: 0.01em;
+  margin-top: 4px;
+  font-family: 'Bodoni Moda', 'Taviraj', Georgia, serif;
+  font-size: clamp(3rem, 6.4vw, 7.2rem);
+  font-style: italic;
+  font-weight: 600;
+  font-optical-sizing: none;
+  font-variation-settings: 'opsz' 24; /* opsz ใหญ่ทำให้เส้นบางหายที่ขนาดใหญ่ */
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
 }
 
 .hero__name span {
   display: block;
 }
 
+.hero__first {
+  color: var(--choc);
+}
+
+.hero__last {
+  color: transparent;
+  -webkit-text-stroke: max(1.2px, 0.014em) var(--choc);
+}
+
+/* ตำแหน่ง: แดงเบอร์กันดี ตัวพิมพ์ใหญ่ช่องไฟกว้าง */
 .hero__role {
-  font-family: var(--display);
-  font-size: clamp(1.15rem, 1.9vw, 1.7rem);
+  margin-top: clamp(18px, 2.4vw, 32px);
+  font-family: 'Jost', 'Taviraj', sans-serif;
+  font-size: clamp(0.95rem, 1.35vw, 1.3rem);
   font-weight: 500;
-  line-height: 1.3;
-  letter-spacing: 0.03em;
-  color: var(--accent);
+  letter-spacing: 0.26em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--burg);
 }
 
 .hero__summary,
 .hero__tagline {
-  max-width: 42ch;
+  max-width: 34ch;
   margin-top: 14px;
-  color: var(--ink-soft);
+  font-size: clamp(1.02rem, 1.2vw, 1.15rem);
+  line-height: 1.75;
+  color: var(--choc-soft);
+  text-wrap: balance;
 }
 
 .hero__summary {
-  color: var(--ink);
+  color: var(--choc);
 }
 
-/* ---------- รูป: วงกลมทองเก่า + วงเมเนอร์ รูปคนยื่นเกินวงด้านล่าง ---------- */
-.hero__portrait {
-  position: relative;
-  z-index: 2;
-  align-self: end;
-  justify-self: center;
-  width: 100%;
-  max-width: 460px;
-  aspect-ratio: 1 / 1.13; /* วงกลม (สี่เหลี่ยมจัตุรัสบน) + ส่วนที่คนยื่นลงมา */
+.hero .nobr {
+  white-space: nowrap;
 }
 
-.hero__disc {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 34% 28%, rgb(255 236 190 / 0.55), transparent 58%),
-    radial-gradient(circle at 50% 50%, #cfa95a, #a97e36 78%);
-  box-shadow: inset 0 0 0 1px rgb(90 64 24 / 0.35);
-}
-
-/* วงลายเมเนอร์บาง ๆ รอบวงกลม */
-.hero__disc::after {
-  content: '';
-  position: absolute;
-  inset: -7%;
-  background: url('/images/meander-medallion.svg') center / contain no-repeat;
-  opacity: 0.45;
-}
-
-.hero__portrait img {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 86%;
-  height: auto;
-  max-width: none;
-  filter: none; /* สีจริง (ไม่ใช้ grayscale ของ wireframe) */
-  translate: -50% 0;
-}
-
-/* ---------- ด้านขวา: find me on + ปุ่ม ---------- */
-.hero__side {
+/* ---------- ปุ่ม ---------- */
+.hero__actions {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-  padding-bottom: clamp(24px, 5vw, 72px);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px clamp(20px, 2.4vw, 32px);
+  margin-top: clamp(24px, 3vw, 36px);
 }
 
-.hero__find {
-  display: flex;
+.hero__cta,
+.hero__more,
+.hero__resume {
+  font-family: 'Jost', 'Taviraj', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* View Projects: แคปซูลแดงเบอร์กันดี */
+.hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 50px;
+  padding: 0 26px;
+  border-radius: 999px;
+  background: var(--burg);
+  color: var(--cream);
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  box-shadow: 0 10px 20px -14px rgb(106 45 34 / 0.8);
+  transition: background 0.2s;
+}
+
+.hero__cta:hover {
+  background: var(--burg-dark);
+}
+
+.hero__cta svg {
+  width: 16px;
+  height: 16px;
+  transition: translate 0.2s;
+}
+
+.hero__cta:hover svg {
+  translate: 3px 0;
+}
+
+/* Discover More: วงกลมเส้นบาง + ข้อความ (ไปส่วน About) */
+.hero__more {
+  display: inline-flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 4px;
-  font-family: var(--display);
-  font-size: 1.1rem;
+  min-height: 44px;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  color: var(--choc);
 }
 
-.hero__find ul {
-  display: flex;
-  gap: 8px;
-}
-
-.hero__find a {
+.hero__more-icon {
   display: grid;
   place-items: center;
   width: 44px;
   height: 44px;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--choc);
   border-radius: 50%;
   transition: background 0.2s, color 0.2s;
 }
 
-.hero__find a:hover {
-  background: var(--ink);
-  color: var(--paper);
-}
-
-/* ปุ่มแคปซูล */
-.hero__pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  width: min(100%, 260px);
-  min-height: 50px;
-  white-space: nowrap;
-  padding: 0 22px;
-  border: 1px solid var(--ink);
-  border-radius: 999px;
-  font-family: var(--display);
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-decoration: none;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
-}
-
-.hero__pill svg {
+.hero__more-icon svg {
   width: 16px;
   height: 16px;
 }
 
-.hero__pill:hover {
-  background: var(--ink);
-  color: var(--paper);
+.hero__more:hover .hero__more-icon {
+  background: var(--choc);
+  color: var(--cream);
 }
 
-/* My Project: สีเน้น + ปุ่มลูกศรกลมในตัว (ลิงก์เดียว) */
-.hero__pill--primary {
-  padding-right: 7px;
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--paper);
+/* ช่องทางติดต่อ + ดาวน์โหลดเรซูเม่ (รอง) */
+.hero__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 22px;
+  margin-top: 22px;
 }
 
-.hero__pill--primary:hover {
-  border-color: var(--accent-hover);
-  background: var(--accent-hover);
+.hero__social {
+  display: flex;
+  gap: 8px;
 }
 
-.hero__go {
+.hero__social a {
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgb(48 35 27 / 0.4);
   border-radius: 50%;
-  background: var(--paper);
-  color: var(--accent);
-  transition: translate 0.2s;
+  color: var(--choc);
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
-.hero__pill--primary:hover .hero__go {
-  translate: 3px 0;
+.hero__social a:hover {
+  border-color: var(--choc);
+  background: var(--choc);
+  color: var(--cream);
 }
 
-/* ---------- เครดิตภาพมือ ---------- */
-.hero__credit {
+.hero__social svg {
+  width: 17px;
+  height: 17px;
+}
+
+.hero__resume {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding-left: 22px;
+  border-left: 1px solid rgb(48 35 27 / 0.25);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  color: var(--choc);
+}
+
+.hero__resume:hover {
+  color: var(--burg);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.hero__resume svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ---------- แถบความถนัดด้านล่าง: marquee วนไม่สิ้นสุด ขวา -> ซ้าย ---------- */
+.hero__strip {
+  --sep: clamp(20px, 2.4vw, 40px); /* ระยะจากคำถึงจุดคั่น (เท่ากันทุกช่วง รวมรอยต่อระหว่างชุด) */
+  position: relative;
+  z-index: 2;
+  margin: 0 var(--pad);
+  padding: 20px 0 24px;
+}
+
+/* เส้นทองเก่าบาง: เริ่มจากดาวไปจนสุดขอบขวา */
+.hero__strip::before {
+  content: '';
   position: absolute;
-  right: 16px;
-  bottom: 10px;
-  max-width: 300px;
-  font-size: 0.74rem;
-  line-height: 1.4;
-  text-align: right;
-  color: var(--ink-soft);
+  top: 0;
+  right: 0;
+  left: 26px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), rgb(177 138 69 / 0.45));
 }
 
-/* ขอบข้างจอแคบเกินให้มือ: ซ่อน */
-@media (max-width: 1279px) {
-  .hero__hand,
-  .hero__credit {
+.hero__star {
+  position: absolute;
+  top: -9px;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  fill: var(--choc);
+}
+
+/* หน้าต่างของ marquee: ตัดส่วนเกิน (ไม่ดันหน้าจอให้เลื่อนแนวนอน) ขอบสองข้างจางลง */
+.hero__marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 56px, #000 calc(100% - 56px), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 56px, #000 calc(100% - 56px), transparent);
+}
+
+/* รางที่เลื่อน: กว้าง = ทุกชุดรวมกัน เลื่อนไป 1 ชุด (100% / จำนวนชุด) แล้ววนใหม่
+   ทุกชุดกว้างเท่ากันเป๊ะ จุดจบจึงตรงกับจุดเริ่ม ไม่มีการกระตุกหรือช่องว่าง */
+.hero__track {
+  display: flex;
+  width: max-content;
+  animation: hero-marquee 44s linear infinite;
+  will-change: translate;
+}
+
+@keyframes hero-marquee {
+  to {
+    translate: calc(-100% / var(--copies)) 0;
+  }
+}
+
+/* ชี้เมาส์ค้าง (desktop): หยุดอ่านได้ */
+@media (hover: hover) {
+  .hero__marquee:hover .hero__track {
+    animation-play-state: paused;
+  }
+}
+
+.hero__focus {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+.hero__focus li {
+  display: flex;
+  align-items: center;
+  font-family: var(--display);
+  font-size: clamp(0.76rem, 0.95vw, 0.92rem);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--choc);
+}
+
+/* จุดเบอร์กันดีหลังทุกคำ (รวมคำสุดท้ายของชุด) ระยะเท่ากันทุกช่วง */
+.hero__focus li::after {
+  content: '';
+  flex: none;
+  width: 5px;
+  height: 5px;
+  margin: 0 var(--sep);
+  border-radius: 50%;
+  background: var(--burg);
+}
+
+/* ---------- ตัวบอกให้เลื่อนลง (แนวตั้ง ขวาล่าง) ---------- */
+.hero__scroll {
+  position: absolute;
+  right: calc(var(--pad) / 2 - 8px);
+  bottom: calc(var(--strip-h) + 12px);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  color: var(--choc);
+}
+
+.hero__scroll::after {
+  content: '';
+  width: 9px;
+  height: 64px;
+  background:
+    linear-gradient(var(--choc), var(--choc)) center top / 1px calc(100% - 4px) no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 9 6'%3E%3Cpath d='M.5.5 4.5 5 8.5.5' fill='none' stroke='%2330231b'/%3E%3C/svg%3E") center bottom / 9px 6px no-repeat;
+}
+
+/* ---------- จอกลาง (761-1199): ฉากกว้างขึ้น รูปเล็กลง ไม่มีตัวบอกเลื่อน ---------- */
+@media (max-width: 1199px) {
+  .hero__scroll {
     display: none;
   }
-}
 
-/* แท็บเล็ต: รูปกับข้อความคู่กัน ปุ่มลงไปแถวล่าง */
-@media (max-width: 1000px) and (min-width: 761px) {
-  .hero__inner {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  .hero__scene {
+    width: 74%;
   }
 
-  .hero__side {
-    grid-column: 1;
-    grid-row: 2;
-    padding-bottom: 40px;
-  }
-
-  .hero__text {
-    padding-bottom: 0;
+  .hero__portrait,
+  .hero__visual::after {
+    left: 72%;
   }
 
   .hero__portrait {
-    grid-column: 2;
-    grid-row: 1 / 3;
+    height: min(66%, 520px);
+  }
+
+  .hero__text {
+    max-width: 54vw;
   }
 }
 
-/* มือถือ: รูปบน ข้อความและปุ่มใต้รูป */
-@media (max-width: 760px) {
+/* ---------- แท็บเล็ตแนวนอน (900-1000): รูปชิดขวาขึ้น เล็กลง ไม่ชนปุ่ม ---------- */
+@media (max-width: 1000px) and (min-width: 900px) {
+  .hero__portrait,
+  .hero__visual::after {
+    left: 77%;
+  }
+
+  .hero__portrait {
+    height: min(58%, 470px);
+  }
+}
+
+/* ---------- จอแคบกว่า 900px (มือถือ + แท็บเล็ตแนวตั้ง): จัดใหม่เป็นแนวตั้ง ----------
+   ลำดับ: Hello -> ชื่อ -> ตำแหน่ง -> คำแนะนำ -> รูป (บนฉาก) -> ปุ่ม -> ช่องทางติดต่อ/เรซูเม่ -> แถบความถนัด
+   .hero__inner / .hero__text เป็น display: contents ให้ลูกทุกตัวเรียงลำดับใน flex ของ .hero ได้ (ไม่ต้องซ้ำ markup)
+   ความสูงตามเนื้อหา ไม่อิงความสูงจอ */
+@media (max-width: 899px) {
   .hero {
-    padding-bottom: 48px;
+    --gutter: clamp(16px, 5vw, 40px);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
 
-  .hero__inner {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: 28px;
-    text-align: center;
-  }
-
-  /* ช่องข้อความเต็มแถว (container query วัดจากช่องนี้ ห้ามหดตามเนื้อหา) */
+  .hero__inner,
   .hero__text {
-    width: 100%;
+    display: contents;
   }
 
-  .hero__portrait {
-    order: -1;
-    align-self: auto;
-    width: min(300px, 78vw);
-  }
-
-  /* ฐานใต้รูป: เส้นบางให้ขอบล่างของรูปมีที่วาง */
-  .hero__portrait::after {
-    content: '';
-    position: absolute;
-    right: -12%;
-    bottom: 0;
-    left: -12%;
-    height: 1px;
-    background: var(--rule);
-  }
-
-  .hero__text,
-  .hero__side {
-    padding-bottom: 0;
-  }
-
+  .hero__hello,
+  .hero__name,
+  .hero__role,
   .hero__summary,
+  .hero__tagline,
+  .hero__actions,
+  .hero__links {
+    position: relative;
+    z-index: 1;
+    margin-inline: var(--gutter);
+  }
+
+  .hero__hello {
+    margin-top: clamp(32px, 7vw, 56px);
+    font-size: clamp(1.7rem, 7.6vw, 3rem);
+  }
+
+  /* ชื่อ: ใหญ่สุดเท่าที่ "TONGYUANG" ยังไม่ล้นจอ (กว้างราว 6.2em) */
+  .hero__name {
+    font-size: clamp(2.3rem, 12.4vw, 6.4rem);
+  }
+
+  .hero__role {
+    font-size: clamp(0.78rem, 3.6vw, 1.15rem);
+    letter-spacing: 0.2em;
+  }
+
   .hero__tagline {
-    margin-inline: auto;
+    max-width: 36ch;
   }
 
-  .hero__side {
-    align-items: center;
-    justify-self: center;
-    width: min(100%, 320px);
+  /* รูปบนฉาก: บล็อกเต็มความกว้างจอ ต่อจากคำแนะนำ */
+  .hero__visual {
+    order: 1;
+    position: relative;
+    inset: auto;
+    height: clamp(340px, 96vw, 640px);
+    margin-top: 4px;
   }
 
-  .hero__pill {
+  .hero__scene {
     width: 100%;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 72%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 72%, transparent 100%);
+  }
+
+  .hero__scene img {
+    object-position: 62% 40%;
+  }
+
+  /* รูปกึ่งกลาง สูงไม่เกินบล็อก หน้าไม่ถูกตัด (ภาพทั้งรูปอยู่ในกรอบ ยกเว้นขอบไหล่ที่จาง) */
+  .hero__portrait {
+    bottom: 0;
+    left: 50%;
+    height: 90%;
+  }
+
+  .hero__visual::after {
+    bottom: 0;
+    left: 50%;
+    width: 100%;
+  }
+
+  .hero__actions {
+    order: 2;
+    margin-top: 20px;
+  }
+
+  .hero__links {
+    order: 3;
+    margin-top: 18px;
+    margin-bottom: 32px;
+  }
+
+  /* จอสัมผัส: ปุ่มไอคอนติดต่อ 44px */
+  .hero__social a {
+    width: 44px;
+    height: 44px;
+  }
+
+  .hero__resume {
+    min-height: 44px;
+  }
+
+  .hero__strip {
+    --sep: 18px;
+    order: 4;
+    margin: 0 var(--gutter);
+    padding-bottom: 20px;
+  }
+
+  .hero__marquee {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 28px, #000 calc(100% - 28px), transparent);
+  }
+
+  /* ชุดสั้นลงบนจอแคบ: ช้าลงเล็กน้อยให้ความเร็วใกล้เคียง desktop */
+  .hero__track {
+    animation-duration: 36s;
+  }
+}
+
+/* มือถือ (< 430px): ไอคอนติดต่อแถวหนึ่ง ลิงก์เรซูเม่อีกแถว (ไม่มีเส้นคั่นค้างหน้าลิงก์) */
+@media (max-width: 429px) {
+  .hero__links {
+    row-gap: 6px;
+  }
+
+  .hero__resume {
+    flex-basis: 100%;
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* มือถือเล็ก (< 375px): ช่องปุ่มแคบลง */
+@media (max-width: 374px) {
+  .hero__actions {
+    gap: 12px 20px;
+  }
+}
+
+/* ลดการเคลื่อนไหว: ไม่วิ่ง แสดงชุดเดียว (ขึ้นบรรทัดใหม่ได้ ไม่ล้นจอ) จุดคั่นเฉพาะระหว่างคำ */
+@media (prefers-reduced-motion: reduce) {
+  .hero__track {
+    width: auto;
+    animation: none;
+  }
+
+  .hero__marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .hero__focus {
+    flex: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 8px;
+  }
+
+  .hero__focus--dup {
+    display: none;
+  }
+
+  .hero__focus li:last-child::after {
+    display: none;
+  }
+
+  .hero__cta,
+  .hero__cta svg,
+  .hero__more-icon,
+  .hero__social a {
+    transition: none;
   }
 }
