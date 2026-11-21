@@ -542,17 +542,92 @@
 /* ---------- แถบเหรียญด้านล่าง (สีกระดาษ ขอบโค้ง) ---------- */
 .pj__band {
   position: relative;
-  display: flex;
-  justify-content: center;
+  /* เชือกซ้าย | เหรียญ | เชือกขวา */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(14px, 1.4vw, 26px);
   padding: clamp(30px, 2.6vw, 50px) 16px clamp(26px, 2.2vw, 44px);
   border-radius: 50% 50% 0 0 / clamp(40px, 4vw, 90px) clamp(40px, 4vw, 90px) 0 0;
-  background: var(--paper);
+  background: var(--paper-grain) fixed, var(--paper); /* กระดาษเดียวกับทั้งหน้า */
   color: var(--ink);
 }
 
 .pj__coins {
+  grid-column: 2;
+  grid-row: 1;
   display: flex;
   align-items: center;
+  padding: 0; /* ไม่ใช้ระยะเยื้องของ ol: เหรียญอยู่กึ่งกลางจริง */
+}
+
+/* ---------- เชือกทองร้อยเหรียญ: ลอเรล (ปลายนอก) -> เชือกบิด -> ลูกปัด (ชิดเหรียญ) ---------- */
+.pj__cord {
+  --laurel-w: clamp(76px, 6.4vw, 128px);
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  width: min(100%, 24vw);
+  pointer-events: none;
+}
+
+.pj__cord--left {
+  grid-column: 1;
+  justify-self: end;
+}
+
+/* ด้านขวา = ด้านซ้ายกลับข้าง */
+.pj__cord--right {
+  grid-column: 3;
+  justify-self: start;
+  transform: scaleX(-1);
+}
+
+/* เชือกบิดสองเกลียว: ทองบนเส้นหมึกจาง */
+.pj__cord-rope {
+  flex: 1;
+  min-width: 0;
+  height: 6px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6' viewBox='0 0 6 6'%3E%3Crect y='.5' width='6' height='5' fill='%23d9b765'/%3E%3Cpath d='M-.4 5.3C1.2 5.3 2.8.7 4.4.7' fill='none' stroke='%238a6a3c' stroke-width='.9'/%3E%3C/svg%3E")
+    repeat-x left center / auto 100%;
+  /* ค่อย ๆ จางไปทางกิ่งลอเรล */
+  -webkit-mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.5), #000 35%);
+  mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.5), #000 35%);
+}
+
+/* ลูกปัดทองชิดเหรียญ */
+.pj__cord-bead {
+  flex-shrink: 0;
+  width: 9px;
+  height: 9px;
+  margin-left: -1px;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  background: #c9a24f;
+}
+
+/* กิ่งลอเรล (SVG แนวตั้ง) หมุนนอน ปลายกิ่งชี้ออกนอก โคนกิ่งต่อกับเชือก */
+.pj__cord-laurel {
+  position: relative;
+  flex-shrink: 0;
+  width: var(--laurel-w);
+  height: calc(var(--laurel-w) * 100 / 210);
+  margin-right: -4px;
+}
+
+.pj__cord-sprig {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--laurel-w) * 100 / 210);
+  height: var(--laurel-w);
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+@media (max-width: 760px) {
+  .pj__cord {
+    display: none;
+  }
 }
 
 .pj__coins li {
@@ -683,6 +758,19 @@
   .pj__join {
     margin: 0 8px;
     font-size: 1rem;
+  }
+}
+
+/* ---------- มือถือเล็ก (< 375px): เหรียญ 44px (ยังแตะง่าย) ช่อง + แคบลง ---------- */
+@media (max-width: 374px) {
+  .pj__coin {
+    width: 44px;
+    height: 44px;
+  }
+
+  .pj__join {
+    margin: 0 6px;
+    font-size: 0.9rem;
   }
 }
 

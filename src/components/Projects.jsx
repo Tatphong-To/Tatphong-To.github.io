@@ -377,6 +377,16 @@ export default function Projects() {
 
         {/* แถบเหรียญด้านล่าง */}
         <nav className="pj__band" aria-label="เลือกโปรเจกต์">
+          {/* เชือกทองร้อยเหรียญ + กิ่งลอเรลปลายเชือก (ตกแต่ง ซ่อนบนมือถือ) */}
+          {['left', 'right'].map((side) => (
+            <span key={side} className={`pj__cord pj__cord--${side}`} aria-hidden="true">
+              <span className="pj__cord-laurel">
+                <Laurel className="pj__cord-sprig" />
+              </span>
+              <span className="pj__cord-rope" />
+              <span className="pj__cord-bead" />
+            </span>
+          ))}
           <ol className="pj__coins">
             {projects.map((p, i) => (
               <li key={p.title}>

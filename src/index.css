@@ -1,7 +1,11 @@
 /* ===== Design tokens: ธีม "Archivum" (กระดาษเก่า + หมึก + แดงปอมเปอี) ===== */
 :root {
   /* สี */
-  --paper: #efe6d2; /* พื้นกระดาษ */
+  /* พื้นกระดาษสีเดียวทั้งเว็บ (Warm Ivory): ทุก section / navbar / แถบ ใช้ตัวแปรนี้ ห้ามตั้งสีครีมแยกเอง */
+  --color-paper: #f3ebdd;
+  --paper: var(--color-paper); /* ชื่อเดิม (ใช้เป็นสีตัวอักษรบนพื้นเข้มด้วย) */
+  /* เนื้อกระดาษ: noise จาง ๆ จาก SVG feTurbulence ใช้ร่วมกับ background-attachment: fixed ให้ลายต่อกันทุกชั้น */
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .17 0 0 0 0 .13 0 0 0 0 .09 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
   --ink: #2b2118; /* ตัวอักษรหลัก ~13:1 บนกระดาษ */
   --ink-soft: #5e4e3c; /* ตัวอักษรรอง ~6.5:1 */
   --accent: #7a2e22; /* แดงปอมเปอี: ปุ่มหลัก ลิงก์ focus ~8:1 */
@@ -20,7 +24,7 @@
 
   /* layout */
   --container: 1120px;
-  --nav-h: 64px;
+  --nav-h: 76px; /* ความสูง navbar (ใช้กับ scroll-margin ของ section ด้วย) */
   --gap: 24px;
   --section-space: 64px;
 }
@@ -44,16 +48,14 @@ body {
   color: var(--ink);
 }
 
-/* พื้นผิวกระดาษ: noise จาก SVG feTurbulence (ไม่ใช้ไฟล์รูป) + ขอบมืดจาง ๆ */
+/* พื้นผิวกระดาษทั้งหน้า: noise สม่ำเสมอ (ไม่มีขอบมืด ไม่มีสีทับ) แผ่นเดียวต่อเนื่องทุก section */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse at center, transparent 55%, rgb(74 56 38 / 0.14) 100%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .17 0 0 0 0 .13 0 0 0 0 .09 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
+  background: var(--paper-grain);
 }
 
 h1,

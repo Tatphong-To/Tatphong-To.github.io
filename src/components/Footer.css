@@ -172,7 +172,13 @@
     aspect-ratio: 1600 / 680;
   }
 
-  /* ป้ายเรียงใต้เรือ (อ่านง่ายกว่าวางทับเรือที่เล็กบนมือถือ) */
+  .contact__copy {
+    margin-top: 28px;
+  }
+}
+
+/* มือถือ (< 600px): ป้ายเรียงใต้เรือ (เรือเล็กเกินให้ป้ายวางทับ) / 600-899 ป้ายยังวางบนเรือเหมือน desktop */
+@media (max-width: 599px) {
   .contact__pills {
     position: static;
     display: flex;
@@ -187,7 +193,10 @@
     translate: none;
   }
 
-  .contact__copy {
-    margin-top: 28px;
+  /* อีเมลยาว: ตัดบรรทัดได้ ไม่ล้นจอ */
+  .contact__pill {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 }
