@@ -19,7 +19,10 @@ export const profile = {
   email: 'tatphong.to@gmail.com',
   location: 'สมุทรสงคราม, ไทย',
   // icon ที่ใช้ได้: facebook, github, linkedin
-  socials: [{ label: 'GitHub', icon: 'github', url: 'https://github.com/Tatphong-To' }],
+  socials: [
+    { label: 'GitHub', icon: 'github', url: 'https://github.com/Tatphong-To' },
+    { label: 'Facebook', icon: 'facebook', url: 'https://www.facebook.com/that.phngs.thxng.ywng/' },
+  ],
 }
 
 export const navLinks = [

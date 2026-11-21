@@ -1,89 +1,193 @@
-.footer {
-  border-top: 1px solid #000;
-}
+/* ===== Contact (ทำหน้าที่เป็น footer) ===== */
+/* จอ 900px ขึ้นไป (สัดส่วนอิงดีไซน์กว้าง 1821px):
+   แถวบน = หัวข้อ (ซ้าย) | เรือ 45vw (ขวา กึ่งกลางแนวตั้งกับหัวข้อ)
+   แถวกลาง = ข้อความสองบรรทัด / แถวล่าง = © */
+.contact {
+  --pill-bg: #f6efdf;
 
-.footer__grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: var(--gap);
-  padding-top: 40px;
-  padding-bottom: 40px;
-}
-
-.footer__logo {
-  display: inline-flex;
+  grid-template-columns: minmax(0, 1fr) 45vw;
+  grid-template-areas:
+    'title sea'
+    'lede lede'
+    'copy copy';
   align-items: center;
-  gap: 8px;
-  text-decoration: none;
+  column-gap: 2vw;
+  padding: 5vw 2vw 2.5vw 3.3vw; /* บน 5vw / ขวา 2% / ล่าง 2.5vw / ซ้าย 3.3% */
+  overflow-x: clip; /* ป้ายยื่นพ้นเรือได้ แต่ไม่เกิดแถบเลื่อนแนวนอน */
+  border-top: 1px solid var(--rule);
 }
 
-.footer__logo em {
-  font-style: normal;
+/* หัวข้อ: Taviraj 800 ตัวเอียง ("Contact!" กว้างราว 41% ของจอ) */
+.contact__title {
+  grid-area: title;
+  font-family: var(--text);
+  font-size: clamp(3.5rem, 9.2vw, 11rem); /* วัดจริง: 9.2vw -> "Contact!" ~41% ของจอ */
+  font-style: italic;
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  color: #2b2118;
 }
 
-.footer__mark {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid #000;
+.contact__title > span {
+  display: block;
 }
 
-.footer__brand p {
-  margin: 12px 0 8px;
+/* ข้อความใต้หัวข้อ: ตัวเอียง สองบรรทัด บรรทัดละประโยค */
+.contact__lede {
+  grid-area: lede;
+  margin-top: clamp(20px, 2.4vw, 40px);
+  font-size: clamp(1.125rem, 1.8vw, 2.1rem); /* ~26px ที่ 1440px, ไม่ต่ำกว่า 18px */
+  font-style: italic;
+  line-height: 1.5;
+  color: #5e4e3c; /* ~6.5:1 บนกระดาษ */
 }
 
-.footer__col h2 {
-  margin-bottom: 8px;
-  font-size: 1rem;
+.contact__lede > span {
+  display: block;
+  white-space: nowrap;
 }
 
-.footer__links {
-  display: grid;
-  gap: 4px;
-}
-
-.footer__social {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.footer__social svg {
-  width: 18px;
-  height: 18px;
-}
-
-.footer__bottom {
-  border-top: 1px solid #000;
-}
-
-.footer__bottom-inner {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px;
-  padding-top: 16px;
-  padding-bottom: 16px;
+/* บรรทัดเล็กล่างสุดของส่วน บนพื้นกระดาษ */
+.contact__copy {
+  grid-area: copy;
+  margin-top: clamp(28px, 3.5vw, 56px);
   font-size: 0.9rem;
+  color: var(--ink-soft);
 }
 
-.footer__bottom abbr {
+.contact__copy abbr {
   text-decoration: none;
 }
 
-@media (max-width: 760px) {
-  .footer__grid {
-    grid-template-columns: 1fr 1fr;
+/* ---------- เรือกับคลื่น: กว้าง 45vw ชิดขวา ไม่มีกรอบ (ขอบน้ำจางในไฟล์แล้ว) ---------- */
+.contact__sea {
+  position: relative;
+  grid-area: sea;
+  width: 100%;
+  aspect-ratio: 1600 / 680; /* กันหน้ากระโดดก่อนรูปโหลด */
+  overflow: visible;
+}
+
+.contact__boat {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  filter: none; /* สีจริง (ไม่ใช้ grayscale ของ wireframe) */
+}
+
+/* ป้ายติดต่อ: จุดกึ่งกลางป้ายเป็น % ของกรอบรูป */
+.contact__pills {
+  position: absolute;
+  inset: 0;
+}
+
+.contact__pill-item {
+  position: absolute;
+  top: var(--y);
+  left: var(--x);
+  translate: -50% -50%;
+}
+
+.contact__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 20px 0 16px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--pill-bg);
+  box-shadow: 0 8px 16px -8px rgb(43 33 24 / 0.45);
+  font-size: 1rem; /* หมึกบนกระดาษอ่อน ~14:1 */
+  line-height: 1.2;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.contact__pill:hover {
+  background: #ecdfc2;
+}
+
+.contact__pill:hover span {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.contact__pill svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* จอกลาง: ป้ายเล็กลงเล็กน้อยตามรูป (ยังสูง >= 44px ข้อความ 15px) */
+@media (max-width: 1199px) {
+  .contact__pill {
+    min-height: 44px;
+    padding: 0 14px 0 12px;
+    gap: 8px;
+    font-size: 0.9375rem;
   }
 
-  .footer__brand {
-    grid-column: 1 / -1;
+  .contact__pill svg {
+    width: 18px;
+    height: 18px;
   }
 }
 
-@media (max-width: 420px) {
-  .footer__grid {
-    grid-template-columns: 1fr;
+/* ---------- มือถือ (< 900px): ข้อความบน รูปเต็มจอ ป้ายเรียงใต้เรือ © ล่างสุด ---------- */
+@media (max-width: 899px) {
+  .contact {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'title'
+      'lede'
+      'sea'
+      'copy';
+    padding: 56px 16px 16px;
+  }
+
+  .contact__title {
+    font-size: clamp(3rem, 17vw, 5.5rem);
+  }
+
+  .contact__lede {
+    margin-top: 18px;
+  }
+
+  .contact__lede > span {
+    white-space: normal;
+  }
+
+  .contact__sea {
+    width: calc(100% + 32px);
+    margin: 24px -16px 0;
+    aspect-ratio: auto;
+  }
+
+  .contact__boat {
+    height: auto;
+    aspect-ratio: 1600 / 680;
+  }
+
+  /* ป้ายเรียงใต้เรือ (อ่านง่ายกว่าวางทับเรือที่เล็กบนมือถือ) */
+  .contact__pills {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 16px 0;
+  }
+
+  .contact__pill-item {
+    position: static;
+    translate: none;
+  }
+
+  .contact__copy {
+    margin-top: 28px;
   }
 }
