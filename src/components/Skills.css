@@ -1,55 +1,355 @@
+/* ===== Skills: กระดาษ 3 แผ่นห้อยบนโซ่ บนพื้นกระดาษของหน้า ===== */
 .skills {
-  padding: var(--section-space) 0;
-  border-bottom: 1px solid #000;
+  --sheet-w: clamp(340px, 30vw, 400px);
+  --sheet-paper: #f3e0b8; /* อุ่นกว่าพื้นหน้า (#efe6d2) ให้แผ่นแยกจากพื้นชัด */
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden; /* โซ่ออกนอกจอซ้าย/ขวา */
+  /* บนเว้นเท่ากับใต้การ์ด About (เส้นคั่นลายคลื่นอยู่ตรงกลาง) / ล่างเว้นน้อย: เส้นคั่นเมเนอร์ต่อท้ายแทน */
+  padding: 40px 0 16px;
 }
 
-.skills__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--gap);
-}
-
-.skill-card {
-  padding: 16px;
-  border: 1px solid #000;
-}
-
-.skill-card__head {
-  margin-bottom: 16px;
-}
-
-.skill-card__icon {
-  display: block;
+.skills .section-title {
+  position: relative;
+  z-index: 1;
   margin-bottom: 8px;
 }
 
-.skill-card h3 {
-  font-size: 1.15rem;
+/* ---------- ของตกแต่งเส้นหมึก (ความทึบ 8-14%) ---------- */
+.skills__decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 
-.skill-card__chips {
+.ink {
+  position: absolute;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.12;
+}
+
+.decor--laurel {
+  top: 18px;
+  left: -36px;
+  width: 230px;
+  height: 230px;
+  transform: rotate(-14deg);
+}
+
+.decor--flowers {
+  right: -24px;
+  bottom: 6px;
+  width: 300px;
+  height: 214px;
+  opacity: 0.11;
+}
+
+.ink--bird {
+  stroke-width: 2;
+  opacity: 0.14;
+}
+
+.decor--bird1 {
+  top: 52px;
+  left: 47%;
+  width: 54px;
+  height: 27px;
+}
+
+.decor--bird2 {
+  top: 30px;
+  left: 54%;
+  width: 40px;
+  height: 20px;
+  transform: rotate(8deg);
+}
+
+.decor--bird3 {
+  top: 86px;
+  left: 59%;
+  width: 32px;
+  height: 16px;
+  transform: rotate(-6deg);
+  opacity: 0.1;
+}
+
+/* ---------- แผ่นกระดาษ: สามเหลี่ยม (ซ้ายบน, กลางล่าง, ขวาบน) ---------- */
+.skills__sheets {
+  position: relative;
+  z-index: 1;
+  /* สามแผ่นแถวเดียว (จอ 900px ขึ้นไป): คอลัมน์ไม่ซ้อนกัน แผ่นแคบลงตามจอ สูงสุด --sheet-w
+     ช่องไฟ >= 32px: แผ่นแกว่งสุด ±2.4deg ขอบล่างเข้าหากันได้ราว 23px */
   display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, var(--sheet-w)));
+  justify-content: space-between;
+  column-gap: clamp(32px, 3.4vw, 56px);
+  align-items: start;
+  width: 100%;
+  max-width: 1340px;
+  margin: 40px auto 0;
+  padding: 0 clamp(24px, 4vw, 48px) 24px;
 }
 
-.skill-chip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.sheet:nth-child(1) {
+  grid-column: 1;
+  grid-row: 1;
 }
 
-/* โลโก้เป็นสีดำ (ทับสีแบรนด์ที่ตั้งใน JSX) */
-.skill-chip svg {
-  width: 18px;
-  height: 18px;
-  fill: currentColor;
+/* Back-end: ห้อยต่ำกว่าสองแผ่นข้างเล็กน้อย */
+.sheet:nth-child(2) {
+  grid-column: 2;
+  grid-row: 1;
+  margin-top: 50px;
 }
 
-.skill-chip__letter {
+.sheet:nth-child(3) {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+/* จอกลาง (900-1339): แผ่นแคบลง ลดขอบในและตัวอักษรเล็กน้อย */
+@media (min-width: 900px) and (max-width: 1339px) {
+  .skills .sheet__paper {
+    padding: 38px 24px 30px;
+  }
+
+  .skills .sheet__items {
+    gap: 6px 12px;
+  }
+
+  .skills .sheet__items li {
+    font-size: 0.95rem;
+  }
+}
+
+/* แกว่งเหมือนห้อยบนโซ่ (หมุนรอบขอบบน, transform อย่างเดียว) */
+.sheet {
+  position: relative;
+  transform: rotate(var(--tilt));
+  transform-origin: 50% 0;
+  animation: sheet-swing var(--dur) ease-in-out var(--delay) infinite;
+  animation-play-state: paused;
+  will-change: transform;
+}
+
+.skills.is-playing .sheet {
+  animation-play-state: running;
+}
+
+@keyframes sheet-swing {
+  0%,
+  100% {
+    transform: rotate(calc(var(--tilt) - 0.8deg));
+  }
+
+  50% {
+    transform: rotate(calc(var(--tilt) + 0.8deg));
+  }
+}
+
+/* เลขโรมันตัวใหญ่จาง ๆ หลังแผ่น: โผล่ออกนอกขอบบนขวา ไม่อยู่ใต้ข้อความ */
+.sheet__numeral {
+  position: absolute;
+  top: -0.5em;
+  right: -0.22em;
+  z-index: -1;
+  font-family: var(--display);
+  font-size: 9rem;
+  line-height: 1;
+  color: var(--ink);
+  opacity: 0.1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* เงาใต้แผ่นนุ่ม ๆ (ชั้นนิ่ง ไม่แอนิเมต) */
+.sheet__shadow {
+  position: relative;
+  filter: drop-shadow(0 12px 18px rgb(80 56 30 / 0.28)) drop-shadow(0 2px 3px rgb(60 40 20 / 0.22));
+}
+
+/* กระดาษ: โทนอุ่น + ขอบไหม้จาง ๆ + เส้นขอบหมึกบางด้านใน + ขอบฉีก (clip-path จาก JS) */
+.sheet__paper {
+  padding: 42px 32px 36px;
+  color: var(--ink);
+  outline: 1px solid rgb(43 33 24 / 0.45);
+  outline-offset: -12px; /* กรอบหมึกด้านใน ไม่โดนขอบฉีกตัด */
+  box-shadow: inset 0 0 42px rgb(140 92 40 / 0.28);
+  background:
+    radial-gradient(ellipse at 40% 35%, rgb(255 248 228 / 0.6), transparent 65%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .17 0 0 0 0 .13 0 0 0 0 .09 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E"),
+    var(--sheet-paper);
+}
+
+.sheet__paper h3 {
+  font-size: clamp(1.7rem, 2.4vw, 2.1rem);
+  line-height: 1.15;
+  letter-spacing: 0.03em;
+}
+
+.sheet__desc {
+  margin-top: 6px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ink-soft); /* ~6:1 บนกระดาษแผ่น */
+}
+
+/* รายการ skill: ตัวหมึกสีเข้ม (~12:1 บนกระดาษแผ่น) */
+.sheet__items {
   display: grid;
-  place-items: center;
-  width: 18px;
-  height: 18px;
-  border: 1px solid #000;
-  font-size: 0.7rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 16px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgb(43 33 24 / 0.3);
+}
+
+.sheet__items li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 1.02rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.sheet__items li::before {
+  content: '';
+  position: absolute;
+  top: 0.62em;
+  left: 2px;
+  width: 6px;
+  height: 6px;
+  background: #8a6a3c;
+  transform: rotate(45deg);
+}
+
+/* ห่วงโลหะ (eyelet) 4 มุม */
+.sheet__eyelet {
+  position: absolute;
+  z-index: 1;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, #120f0c 0 34%, #9c8462 38%, #4e4232 62%, #1f1a15 72%);
+  box-shadow: inset 1px -1px 0 rgb(255 245 220 / 0.5), 0 1px 2px rgb(0 0 0 / 0.45);
+  transform: translate(-50%, -50%);
+}
+
+.sheet__eyelet--tl {
+  top: 24px;
+  left: 18px;
+}
+
+.sheet__eyelet--tr {
+  top: 24px;
+  left: calc(100% - 18px);
+}
+
+.sheet__eyelet--bl {
+  top: calc(100% - 24px);
+  left: 18px;
+}
+
+.sheet__eyelet--br {
+  top: calc(100% - 24px);
+  left: calc(100% - 18px);
+}
+
+/* ---------- โซ่ + นกเกาะ (ตำแหน่งจาก JS) ---------- */
+.skills__chain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* นกพิราบเกาะโซ่: เส้นหมึกจาง (ของตกแต่ง) */
+.perch {
+  fill: var(--ink);
+  stroke: var(--ink);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  opacity: 0.14;
+}
+
+/* ---------- มือถือ / แท็บเล็ตแคบ (< 900px): เรียงแนวตั้ง โซ่ซิกแซก ---------- */
+@media (max-width: 899px) {
+  .skills__sheets {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 72px; /* ที่ให้โซ่ลากระหว่างแผ่น */
+    margin-top: 48px;
+    padding: 0 16px 16px;
+  }
+
+  .sheet:nth-child(n) {
+    grid-column: 1;
+    grid-row: auto;
+    width: min(420px, 100%);
+    margin-top: 0;
+  }
+
+  /* เหลื่อมซ้าย-ขวาเล็กน้อยให้โซ่เป็นซิกแซก */
+  .sheet:nth-child(odd) {
+    translate: -8px 0;
+  }
+
+  .sheet:nth-child(even) {
+    translate: 8px 0;
+  }
+
+  .sheet__paper {
+    padding: 38px 24px 32px;
+  }
+
+  .sheet__numeral {
+    font-size: 6rem;
+  }
+
+  .decor--laurel {
+    top: 8px;
+    right: -30px;
+    left: auto;
+    width: 140px;
+    height: 140px;
+    transform: rotate(40deg) scaleX(-1);
+  }
+
+  .decor--flowers {
+    right: auto;
+    left: -30px;
+    bottom: 0;
+    width: 190px;
+    height: 136px;
+    transform: scaleX(-1);
+  }
+
+  .decor--bird1 {
+    top: 36px;
+    left: 52%;
+  }
+
+  .decor--bird2 {
+    top: 20px;
+    left: 68%;
+  }
+
+  .decor--bird3 {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet {
+    animation: none;
+  }
 }

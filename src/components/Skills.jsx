@@ -1,102 +1,325 @@
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { skills } from '../data.js'
+import { toRoman } from '../roman.js'
 import './Skills.css'
+import { Swallow } from './Ornaments.jsx'
 
-// โลโก้จริงจาก Simple Icons (CC0) — https://simpleicons.org
-const logos = {
-  "HTML": { color: '#E34F26', d: 'M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z' },
-  "CSS": { color: '#1572B6', d: 'M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.414z' },
-  "JavaScript": { color: '#F7DF1E', d: 'M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z' },
-  "React": { color: '#61DAFB', d: 'M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38-.318-.184-.688-.277-1.092-.278zm-.005 1.09v.006c.225 0 .406.044.558.127.666.382.955 1.835.73 3.704-.054.46-.142.945-.25 1.44-.96-.236-2.006-.417-3.107-.534-.66-.905-1.345-1.727-2.035-2.447 1.592-1.48 3.087-2.292 4.105-2.295zm-9.77.02c1.012 0 2.514.808 4.11 2.28-.686.72-1.37 1.537-2.02 2.442-1.107.117-2.154.298-3.113.538-.112-.49-.195-.964-.254-1.42-.23-1.868.054-3.32.714-3.707.19-.09.4-.127.563-.132zm4.882 3.05c.455.468.91.992 1.36 1.564-.44-.02-.89-.034-1.345-.034-.46 0-.915.01-1.36.034.44-.572.895-1.096 1.345-1.565zM12 8.1c.74 0 1.477.034 2.202.093.406.582.802 1.203 1.183 1.86.372.64.71 1.29 1.018 1.946-.308.655-.646 1.31-1.013 1.95-.38.66-.773 1.288-1.18 1.87-.728.063-1.466.098-2.21.098-.74 0-1.477-.035-2.202-.093-.406-.582-.802-1.204-1.183-1.86-.372-.64-.71-1.29-1.018-1.946.303-.657.646-1.313 1.013-1.954.38-.66.773-1.286 1.18-1.868.728-.064 1.466-.098 2.21-.098zm-3.635.254c-.24.377-.48.763-.704 1.16-.225.39-.435.782-.635 1.174-.265-.656-.49-1.31-.676-1.947.64-.15 1.315-.283 2.015-.386zm7.26 0c.695.103 1.365.23 2.006.387-.18.632-.405 1.282-.66 1.933-.2-.39-.41-.783-.64-1.174-.225-.392-.465-.774-.705-1.146zm3.063.675c.484.15.944.317 1.375.498 1.732.74 2.852 1.708 2.852 2.476-.005.768-1.125 1.74-2.857 2.475-.42.18-.88.342-1.355.493-.28-.958-.646-1.956-1.1-2.98.45-1.017.81-2.01 1.085-2.964zm-13.395.004c.278.96.645 1.957 1.1 2.98-.45 1.017-.812 2.01-1.086 2.964-.484-.15-.944-.318-1.37-.5-1.732-.737-2.852-1.706-2.852-2.474 0-.768 1.12-1.742 2.852-2.476.42-.18.88-.342 1.356-.494zm11.678 4.28c.265.657.49 1.312.676 1.948-.64.157-1.316.29-2.016.39.24-.375.48-.762.705-1.158.225-.39.435-.788.636-1.18zm-9.945.02c.2.392.41.783.64 1.175.23.39.465.772.705 1.143-.695-.102-1.365-.23-2.006-.386.18-.63.406-1.282.66-1.933zM17.92 16.32c.112.493.2.968.254 1.423.23 1.868-.054 3.32-.714 3.708-.147.09-.338.128-.563.128-1.012 0-2.514-.807-4.11-2.28.686-.72 1.37-1.536 2.02-2.44 1.107-.118 2.154-.3 3.113-.54zm-11.83.01c.96.234 2.006.415 3.107.532.66.905 1.345 1.727 2.035 2.446-1.595 1.483-3.092 2.295-4.11 2.295-.22-.005-.406-.05-.553-.132-.666-.38-.955-1.834-.73-3.703.054-.46.142-.944.25-1.438zm4.56.64c.44.02.89.034 1.345.034.46 0 .915-.01 1.36-.034-.44.572-.895 1.095-1.345 1.565-.455-.47-.91-.993-1.36-1.565z' },
-  "Flutter": { color: '#02569B', d: 'M14.314 0L2.3 12 6 15.7 21.684.013h-7.357zm.014 11.072L7.857 17.53l6.47 6.47H21.7l-6.46-6.468 6.46-6.46h-7.37z' },
-  "Git": { color: '#F05032', d: 'M23.546 10.93L13.067.452c-.604-.603-1.582-.603-2.188 0L8.708 2.627l2.76 2.76c.645-.215 1.379-.07 1.889.441.516.515.658 1.258.438 1.9l2.658 2.66c.645-.223 1.387-.078 1.9.435.721.72.721 1.884 0 2.604-.719.719-1.881.719-2.6 0-.539-.541-.674-1.337-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348.713.721.713 1.883 0 2.6-.719.721-1.889.721-2.609 0-.719-.719-.719-1.879 0-2.598.182-.18.387-.316.605-.406V8.835c-.217-.091-.424-.222-.6-.401-.545-.545-.676-1.342-.396-2.009L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477c.604.604 1.582.604 2.186 0l10.43-10.43c.605-.603.605-1.582 0-2.187' },
-  "GitHub": { color: '#181717', d: 'M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12' },
-  "Docker": { color: '#2496ED', d: 'M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.184-.186h-2.12a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 00-.75.748 11.376 11.376 0 00.692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 003.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288Z' },
+// ===== Skills: กระดาษ 3 แผ่นห้อยบนโซ่ บนพื้นกระดาษของหน้า =====
+// desktop: Front-end (ซ้ายบน) -> Back-end (กลางล่าง) -> Tools (ขวาบน) เป็นสามเหลี่ยม
+// มือถือ: เรียงแนวตั้ง โซ่ต่อลงมาแบบซิกแซก
+// ตำแหน่งห่วงโซ่คำนวณด้วย JS ตอนจัดวาง / ฟอนต์โหลดเสร็จ / ขนาดเปลี่ยน เท่านั้น (ไม่คำนวณทุกเฟรม)
+// ของตกแต่งเส้นหมึก (เลขโรมัน, ลอเรล, กิ่งดอกไม้, นก) วาดเป็น SVG เอง ความทึบ 8-14% aria-hidden ทั้งหมด
+
+const MOBILE = '(max-width: 899px)'
+
+// สุ่มแบบกำหนดค่าตายตัว
+function seeded(seed) {
+  let s = seed
+  return () => (s = (s * 16807) % 2147483647) / 2147483647
 }
 
-// ไอคอนประจำหมวด
-const categoryIcons = {
-  frontend: <path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 4l-3 16" />,
-  backend: (
-    <>
-      <rect x="3" y="4" width="18" height="7" rx="1.5" />
-      <rect x="3" y="13" width="18" height="7" rx="1.5" />
-      <path d="M7 7.5h.01M7 16.5h.01" />
-    </>
-  ),
-  mobile: (
-    <>
-      <rect x="6" y="2.5" width="12" height="19" rx="2.5" />
-      <path d="M11 18h2" />
-    </>
-  ),
-  tools: (
-    <path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3.5 17.3a1.8 1.8 0 0 0 2.5 2.5l5.8-5.8a4 4 0 0 0 5.2-5.4l-2.5 2.5-2.3-.5-.5-2.3z" />
-  ),
+// ขอบกระดาษฉีกไม่เรียบ: polygon ที่หยักเข้าไม่เกิน ~5px รอบขอบ
+function tornEdge(seed) {
+  const rand = seeded(seed)
+  const j = (max) => (rand() * max).toFixed(1)
+  const pts = []
+  for (let i = 0; i <= 24; i++) pts.push(`${(i * 100) / 24}% ${j(5)}px`)
+  for (let i = 1; i < 18; i++) pts.push(`calc(100% - ${j(4)}px) ${(i * 100) / 18}%`)
+  for (let i = 24; i >= 0; i--) pts.push(`${(i * 100) / 24}% calc(100% - ${j(6)}px)`)
+  for (let i = 17; i > 0; i--) pts.push(`${j(4)}px ${(i * 100) / 18}%`)
+  return `polygon(${pts.join(', ')})`
 }
 
-function SkillChip({ name }) {
-  const logo = logos[name]
+// ความต่างของแต่ละแผ่น: เอียง (<= ±2°), รอบแกว่ง, เฟส
+const SHEETS = [
+  { tilt: '-1.6deg', dur: '7s', delay: '-1.4s', seed: 11 },
+  { tilt: '1.2deg', dur: '8.4s', delay: '-4.1s', seed: 23 },
+  { tilt: '-0.8deg', dur: '7.7s', delay: '-2.6s', seed: 37 },
+]
+
+// ----- โซ่ -----
+const PITCH = 13 // ระยะห่างห่วง (px)
+
+// โค้งหย่อน (quadratic) ระหว่างจุด a -> b แล้ววางห่วงทุก PITCH px ตามความยาวเส้น
+function placeLinks(a, b, sag, startIndex) {
+  const c = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + sag]
+  const at = (t) => [
+    (1 - t) ** 2 * a[0] + 2 * (1 - t) * t * c[0] + t ** 2 * b[0],
+    (1 - t) ** 2 * a[1] + 2 * (1 - t) * t * c[1] + t ** 2 * b[1],
+  ]
+  const steps = 240
+  const links = []
+  let prev = at(0)
+  let travelled = 0
+  let next = PITCH / 2
+  let k = startIndex
+  for (let i = 1; i <= steps; i++) {
+    const p = at(i / steps)
+    const seg = Math.hypot(p[0] - prev[0], p[1] - prev[1])
+    while (travelled + seg >= next) {
+      const f = (next - travelled) / seg
+      const x = prev[0] + (p[0] - prev[0]) * f
+      const y = prev[1] + (p[1] - prev[1]) * f
+      const ang = (Math.atan2(p[1] - prev[1], p[0] - prev[0]) * 180) / Math.PI
+      links.push({ x, y, a: ang, face: k % 2 === 0 })
+      k++
+      next += PITCH
+    }
+    travelled += seg
+    prev = p
+  }
+  return links
+}
+
+function computeChain(section) {
+  const box = section.getBoundingClientRect()
+  const mobile = window.matchMedia(MOBILE).matches
+  const center = (el) => {
+    const r = el.getBoundingClientRect()
+    return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top]
+  }
+  // เลือกห่วงที่โซ่ผ่านช่องว่างระหว่างแผ่น ไม่ลากทับเนื้อหา
+  //   จอ 900px ขึ้นไป (สามแผ่นแถวเดียว แผ่นกลางต่ำกว่าเล็กน้อย): ซ้ายบน -> ขวาบน
+  //   มือถือ (แนวตั้ง): ซ้ายบน -> ขวาล่าง
+  const sheets = [...section.querySelectorAll('.sheet')]
+  const [a, b] = mobile ? ['tl', 'br'] : ['tl', 'tr']
+  const nodes = sheets.map((s) => {
+    return {
+      in: center(s.querySelector(`[data-eyelet="${a}"]`)),
+      out: center(s.querySelector(`[data-eyelet="${b}"]`)),
+    }
+  })
+  if (!nodes.length) return null
+
+  // เส้นทาง: นอกจอซ้าย -> แผ่น 1 -> แผ่น 2 -> แผ่น 3 -> นอกจอขวา
+  const first = nodes[0].in
+  const last = nodes[nodes.length - 1].out
+  // จอ 900px ขึ้นไป: ปลายสองข้างเฉียงขึ้นออกนอกจอ (ความชัน ~0.18) แบบโซ่ขึง
+  const RISE = 0.18
+  const startY = mobile ? first[1] - 36 : first[1] - RISE * (first[0] + 40)
+  const endY = mobile ? last[1] + 36 : last[1] - RISE * (box.width + 40 - last[0])
+  const route = [[[-40, startY], first]]
+  for (let i = 0; i < nodes.length - 1; i++) route.push([nodes[i].out, nodes[i + 1].in])
+  route.push([last, [box.width + 40, endY]])
+
+  // นกเกาะโซ่: จอ 900px ขึ้นไป = ช่วงเข้า-ออกนอกจอ (ช่วงระหว่างแผ่นสั้นเกินให้นกเกาะ)
+  // มือถือ = ช่วงแผ่น 1 -> 2
+  const perchOn = mobile ? [1] : [0, route.length - 1]
+  const links = []
+  const perches = []
+  route.forEach(([a, b], i) => {
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1])
+    // จอ 900px ขึ้นไป: โซ่หย่อนตามแรงโน้มถ่วง (จุดต่ำสุดลึก ~20% ของความยาวช่วง) / มือถือคงเดิม
+    // หมายเหตุ: sag คือระยะจุดควบคุม เส้นโค้งจริงลึกครึ่งหนึ่งของค่านี้
+    const sag = mobile ? Math.min(70, 0.12 * len + 8) : Math.min(90, 0.4 * len + 10)
+    const seg = placeLinks(a, b, sag, links.length)
+    if (perchOn.includes(i) && seg.length >= 3) {
+      const mid = seg[Math.floor(seg.length * (i === 0 ? 0.6 : i === route.length - 1 ? 0.4 : 0.5))]
+      perches.push({ x: mid.x, y: mid.y, flip: perches.length % 2 === 1 })
+    }
+    links.push(...seg)
+  })
+  return { w: box.width, h: box.height, links, perches }
+}
+
+// ----- ของตกแต่งเส้นหมึก -----
+
+// กิ่งลอเรล: ก้านโค้ง + ใบรีพร้อมเส้นกลางใบ
+function LaurelSprig({ className }) {
+  const at = (t) => [60 + 120 * t - 40 * t * t, 200 - 170 * t + 20 * t * t]
+  const leaves = Array.from({ length: 11 }, (_, i) => {
+    const t = 0.06 + i * 0.085
+    const [x, y] = at(t)
+    const [x2, y2] = at(t + 0.01)
+    const ang = (Math.atan2(y2 - y, x2 - x) * 180) / Math.PI + (i % 2 ? 48 : -48)
+    return { x, y, ang, s: 1 - i * 0.035 }
+  })
   return (
-    <li className="skill-chip">
-      {logo ? (
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill={logo.color}>
-          <path d={logo.d} />
-        </svg>
-      ) : (
-        <span className="skill-chip__letter" aria-hidden="true">
-          {name[0]}
-        </span>
-      )}
-      {name}
+    <svg className={`ink ${className}`} viewBox="0 0 240 240" aria-hidden="true" focusable="false">
+      <path d="M 60 200 Q 120 110 140 50" />
+      {leaves.map((l, i) => (
+        <g key={i} transform={`rotate(${l.ang.toFixed(1)} ${l.x.toFixed(1)} ${l.y.toFixed(1)})`}>
+          <path
+            d={`M ${l.x.toFixed(1)} ${l.y.toFixed(1)} q ${12 * l.s} ${-7 * l.s} ${26 * l.s} 0 q ${-14 * l.s} ${7 * l.s} ${-26 * l.s} 0 z`}
+          />
+          <path d={`M ${l.x.toFixed(1)} ${l.y.toFixed(1)} l ${22 * l.s} 0`} />
+        </g>
+      ))}
+    </svg>
+  )
+}
+
+// กิ่งดอกไม้: ก้าน + ใบ + ดอก 5 กลีบ 3 ดอก
+function FlowerBranch({ className }) {
+  const flower = (cx, cy, r) => (
+    <g>
+      {Array.from({ length: 5 }, (_, i) => {
+        const a = (i * 72 * Math.PI) / 180
+        const px = cx + Math.cos(a) * r
+        const py = cy + Math.sin(a) * r
+        return <ellipse key={i} cx={px} cy={py} rx={r * 0.75} ry={r * 0.5} transform={`rotate(${i * 72} ${px} ${py})`} />
+      })}
+      <circle cx={cx} cy={cy} r={r * 0.4} />
+    </g>
+  )
+  const leaves = [
+    [230, 176, 20],
+    [200, 162, -30],
+    [150, 140, 25],
+    [110, 104, -35],
+    [60, 70, 15],
+  ]
+  return (
+    <svg className={`ink ${className}`} viewBox="0 0 280 200" aria-hidden="true" focusable="false">
+      <path d="M 270 190 C 210 170 150 150 90 90 C 70 70 50 60 20 60" />
+      <path d="M 170 152 C 160 120 170 100 190 90" />
+      <path d="M 120 118 C 130 90 120 70 100 58" />
+      {leaves.map(([x, y, a], i) => (
+        <path key={i} transform={`rotate(${a} ${x} ${y})`} d={`M ${x} ${y} q 12 -10 26 -2 q -12 12 -26 2 z`} />
+      ))}
+      {flower(192, 86, 7)}
+      {flower(98, 54, 6)}
+      {flower(24, 58, 5)}
+    </svg>
+  )
+}
+
+// นกพิราบเกาะโซ่ (เท้าอยู่ที่จุด x,y บนโซ่)
+function PerchedDove({ x, y, flip }) {
+  return (
+    <g transform={`translate(${x.toFixed(1)} ${(y - 3).toFixed(1)}) scale(${flip ? -1 : 1} 1)`} className="perch">
+      <path d="M -16 -14 C -18 -26 -6 -34 6 -32 C 9 -40 20 -40 22 -32 L 29 -30 L 22 -27 C 22 -16 12 -8 0 -8 C -8 -8 -14 -10 -26 -6 Z" />
+      <path d="M -6 -22 C 2 -18 8 -18 14 -22" />
+      <circle cx="16" cy="-33" r="1.2" />
+      <path d="M -2 -8 L -3 0 M 6 -9 L 6 0 M -5 0 L 0 0 M 3 0 L 9 0" />
+    </g>
+  )
+}
+
+function Sheet({ title, description, items, look, index }) {
+  return (
+    <li className="sheet" style={{ '--tilt': look.tilt, '--dur': look.dur, '--delay': look.delay }}>
+      {/* เลขโรมันตัวใหญ่จาง ๆ หลังแผ่น (โผล่ออกนอกขอบ ไม่อยู่ใต้ข้อความ) */}
+      <span className="sheet__numeral" aria-hidden="true">
+        {toRoman(index + 1)}
+      </span>
+      <div className="sheet__shadow">
+        <div className="sheet__paper" style={{ clipPath: tornEdge(look.seed) }}>
+          <h3>{title}</h3>
+          {description && <p className="sheet__desc">{description}</p>}
+          {items?.length > 0 ? (
+            <ul className="sheet__items">
+              {items.map((name) => (
+                <li key={name}>{name}</li>
+              ))}
+            </ul>
+          ) : (
+            import.meta.env.DEV && <p className="sheet__desc">เพิ่ม skill ได้ที่ src/data.js</p>
+          )}
+        </div>
+        {/* ห่วงโลหะ (eyelet) 4 มุม: โซ่เลือกใช้คู่ที่เหมาะกับเลย์เอาต์ */}
+        {['tl', 'tr', 'bl', 'br'].map((pos) => (
+          <span key={pos} className={`sheet__eyelet sheet__eyelet--${pos}`} data-eyelet={pos} aria-hidden="true" />
+        ))}
+      </div>
     </li>
   )
 }
 
 export default function Skills() {
+  const ref = useRef(null)
+  const [playing, setPlaying] = useState(false)
+  const [chain, setChain] = useState(null)
+
+  // แอนิเมชันเล่นเฉพาะตอนฉากอยู่ในจอ
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !('IntersectionObserver' in window)) return
+    const io = new IntersectionObserver(([entry]) => setPlaying(entry.isIntersecting))
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
+  // คำนวณโซ่: ตอนจัดวาง, ฟอนต์โหลดเสร็จ, ขนาดเปลี่ยน
+  useLayoutEffect(() => {
+    const el = ref.current
+    if (!el) return
+    let frame = 0
+    const update = () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => setChain(computeChain(el)))
+    }
+    update()
+    document.fonts?.ready.then(update)
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => {
+      cancelAnimationFrame(frame)
+      ro.disconnect()
+    }
+  }, [])
+
   return (
-    <section className="skills" id="skills">
+    <section ref={ref} className={`skills${playing ? ' is-playing' : ''}`} id="skills">
+      {/* ของตกแต่งเส้นหมึกด้านหลัง (จาง ๆ ไม่อยู่ใต้ข้อความ) */}
+      <div className="skills__decor" aria-hidden="true">
+        <LaurelSprig className="decor--laurel" />
+        <FlowerBranch className="decor--flowers" />
+        <Swallow className="decor--bird1" />
+        <Swallow className="decor--bird2" />
+        <Swallow className="decor--bird3" />
+      </div>
+
       <div className="container">
         <h2 className="section-title">Skills</h2>
-
-        <ul className="skills__grid">
-          {skills.map(({ title, icon, description, items }) => (
-            <li className="skill-card" key={title}>
-              <div className="skill-card__head">
-                <span className="skill-card__icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                    focusable="false"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    {categoryIcons[icon] ?? categoryIcons.frontend}
-                  </svg>
-                </span>
-                <div>
-                  <h3>{title}</h3>
-                  <p>{description}</p>
-                </div>
-              </div>
-
-              {items?.length > 0 ? (
-                <ul className="skill-card__chips">
-                  {items.map((name) => (
-                    <SkillChip key={name} name={name} />
-                  ))}
-                </ul>
-              ) : (
-                import.meta.env.DEV && (
-                  <p className="skill-card__empty">เพิ่ม skill ได้ที่ src/data.js</p>
-                )
-              )}
-            </li>
-          ))}
-        </ul>
       </div>
+
+      <ul className="skills__sheets">
+        {skills.map((group, i) => (
+          <Sheet key={group.title} {...group} index={i} look={SHEETS[i % SHEETS.length]} />
+        ))}
+      </ul>
+
+      {/* โซ่: ห่วงรีสลับด้านหน้า (วง) กับด้านข้าง (แท่ง) + นกเกาะ */}
+      {chain && (
+        <svg
+          className="skills__chain"
+          style={{ width: chain.w, height: chain.h }}
+          viewBox={`0 0 ${chain.w} ${chain.h}`}
+          aria-hidden="true"
+          focusable="false"
+        >
+          <defs>
+            {/* เหล็กสีเข้ม เด่นบนพื้นกระดาษ */}
+            <linearGradient id="chain-metal" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#6b5e4e" />
+              <stop offset="0.45" stopColor="#3a332c" />
+              <stop offset="1" stopColor="#1d1a17" />
+            </linearGradient>
+            <g id="chain-face">
+              <ellipse rx="8.5" ry="5" fill="none" stroke="#120f0c" strokeWidth="4.4" />
+              <ellipse rx="8.5" ry="5" fill="none" stroke="url(#chain-metal)" strokeWidth="2.8" />
+              <path d="M 1.5 -4.6 Q 7.8 -4.2 8.3 -0.8" fill="none" stroke="#f5ead2" strokeOpacity="0.55" strokeWidth="1" />
+            </g>
+            <g id="chain-edge">
+              <rect x="-9.5" y="-2.3" width="19" height="4.6" rx="2.3" fill="#120f0c" />
+              <rect x="-9" y="-1.6" width="18" height="3.2" rx="1.6" fill="url(#chain-metal)" />
+              <line x1="-6" y1="-1.1" x2="6" y2="-1.1" stroke="#f5ead2" strokeOpacity="0.45" strokeWidth="0.8" />
+            </g>
+          </defs>
+          {chain.links.map((l, i) => (
+            <use
+              key={i}
+              href={l.face ? '#chain-face' : '#chain-edge'}
+              transform={`translate(${l.x.toFixed(1)} ${l.y.toFixed(1)}) rotate(${l.a.toFixed(1)})`}
+            />
+          ))}
+          {/* นกพิราบเกาะบนโซ่ (นิ่ง) */}
+          {chain.perches.map((p, i) => (
+            <PerchedDove key={i} {...p} />
+          ))}
+        </svg>
+      )}
     </section>
   )
 }

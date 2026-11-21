@@ -1,0 +1,76 @@
+/* ===== เส้นคั่น section: แถบเมเนอร์เต็มความกว้างจอ + เหรียญกลาง ===== */
+.divider {
+  --band-h: 16px;
+  --medal: 34px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  opacity: 0.35; /* หมึกจาง = --rule */
+  pointer-events: none;
+  /* ปลายสองข้างจางลงเล็กน้อย */
+  -webkit-mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.2), #000 14%, #000 86%, rgb(0 0 0 / 0.2));
+  mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.2), #000 14%, #000 86%, rgb(0 0 0 / 0.2));
+}
+
+/* ลายกรีกชุดเดียวกับแถบข้างของ Projects (วางแนวนอน) ราวบน-ล่างคือเส้นบางแบบเส้นคั่น Hero
+   repeat: round = ยืด/หดลายเล็กน้อยให้ได้จำนวนเต็ม ไม่มีลายถูกตัดครึ่งที่ปลายหรือชิดเหรียญ */
+.divider__band {
+  flex: 1;
+  min-width: 0;
+  height: var(--band-h);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='24' viewBox='0 0 20 24'%3E%3Cpath d='M0 1H20M0 23H20M0 20V5H16V17H8V9' fill='none' stroke='%232b2118' stroke-width='2'/%3E%3C/svg%3E");
+  background-size: calc(var(--band-h) * 20 / 24) 100%;
+  background-repeat: round;
+}
+
+.divider__ornament {
+  flex-shrink: 0;
+  width: var(--medal) !important;
+  height: var(--medal) !important;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.3;
+}
+
+.divider__dot {
+  fill: var(--ink);
+  stroke: none;
+}
+
+/* ---------- variant="scroll": ลายคลื่นวิทรูเวียน + พวงมาลัยใบมะกอก ---------- */
+.divider--scroll {
+  --band-h: 18px;
+  --medal: 40px;
+}
+
+.divider--scroll .divider__band {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='18' viewBox='0 0 32 18'%3E%3Cpath d='M0 15C8 15 10 3 18 3C24 3 27 7 25 10.5C23.5 13 19.5 12.5 19.5 10C19.5 8.5 21.5 8 22.5 9M25 10.5C27 14 30 15 32 15M0 17.3H32' fill='none' stroke='%232b2118' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: calc(var(--band-h) * 32 / 18) 100%;
+}
+
+.divider__ornament--wreath {
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+
+.divider__leaf {
+  fill: var(--ink);
+  stroke: none;
+}
+
+@media (max-width: 760px) {
+  .divider.divider--scroll {
+    --band-h: 14px;
+    --medal: 30px;
+  }
+}
+
+@media (max-width: 760px) {
+  .divider {
+    --band-h: 12px;
+    --medal: 26px;
+    gap: 8px;
+  }
+}
