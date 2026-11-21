@@ -1,140 +1,134 @@
 import { Swallow } from './Ornaments.jsx'
 
-// ===== ของตกแต่งรอบการ์ด About: เสาไอโอนิก 2 ต้น + กิ่งมะกอกเลื้อยเสา/ห้อยมุมการ์ด + นกนางแอ่น =====
-// SVG นิ่งทั้งหมด (ไม่มีแอนิเมชัน ไม่ใช้ filter) และเป็น aria-hidden
+// ===== ของตกแต่งรอบการ์ด About: แบบภาพพฤกษศาสตร์ในหนังสือเก่า =====
+// การ์ดเหมือนวางทับกิ่งมะกอกที่อัดแห้งไว้: กิ่งโผล่จากหลังการ์ด (ซ้ายบน / ขวาล่าง)
+// มุมทองบาง ๆ แบบกรอบหนังสือ (ขวาบน / ซ้ายล่าง) + นกนางแอ่นเหนือมุมขวาบน
+// SVG นิ่งทั้งหมด aria-hidden ไม่วางทับข้อความ (กิ่งอยู่ใต้การ์ด)
 
 const f = (n) => +n.toFixed(1)
 
-// ใบไม้รีตามแนวเส้น: วางสลับซ้าย-ขวา ทำมุมกับเส้นตามทิศทาง
-function leavesAlong(at, { from = 0.04, to = 0.96, step = 0.07, rx = 6, spread = 52 } = {}) {
-  const out = []
-  let i = 0
-  for (let t = from; t <= to; t += step, i++) {
-    const [x, y] = at(t)
-    const [x2, y2] = at(t + 0.01)
-    const ang = (Math.atan2(y2 - y, x2 - x) * 180) / Math.PI + (i % 2 ? spread : -spread)
-    const rad = (ang * Math.PI) / 180
-    out.push({
-      cx: f(x + Math.cos(rad) * rx * 0.9),
-      cy: f(y + Math.sin(rad) * rx * 0.9),
-      rot: f(ang),
-    })
-  }
-  return out
+// จุดบนเส้นโค้ง cubic
+const cubic = (p0, p1, p2, p3) => (t) => {
+  const u = 1 - t
+  return [0, 1].map((k) => u ** 3 * p0[k] + 3 * u * u * t * p1[k] + 3 * u * t * t * p2[k] + t ** 3 * p3[k])
 }
 
-function stemPath(at, n = 40) {
-  let d = ''
-  for (let i = 0; i <= n; i++) {
+const pathOf = (at, n = 32) =>
+  Array.from({ length: n + 1 }, (_, i) => {
     const [x, y] = at(i / n)
-    d += `${i ? 'L' : 'M'}${f(x)} ${f(y)}`
-  }
-  return d
+    return `${i ? 'L' : 'M'}${f(x)} ${f(y)}`
+  }).join('')
+
+// ใบมะกอกเรียวยาวตามแนวกิ่ง สลับซ้าย-ขวา ใบเล็กลงไปทางปลาย
+function leavesOn(at, { from, to, count, len, spread = 38, shrink = 0.45, startSide = 0 }) {
+  return Array.from({ length: count }, (_, i) => {
+    const t = from + ((to - from) * i) / Math.max(1, count - 1)
+    const [x, y] = at(t)
+    const [x2, y2] = at(Math.min(1, t + 0.01))
+    const side = (i + startSide) % 2 ? 1 : -1
+    const ang = (Math.atan2(y2 - y, x2 - x) * 180) / Math.PI + side * spread
+    return { x: f(x), y: f(y), ang: f(ang), l: f(len * (1 - (shrink * i) / count)) }
+  })
 }
 
-// กิ่งเลื้อยขึ้นลำเสา: เส้นคลื่นพันรอบเสาจากล่างขึ้นบน (viewBox 60x220)
-const vineAt = (t) => [30 + 17 * Math.sin(t * Math.PI * 3.2), 216 - t * 206]
-const VINE_STEM = stemPath(vineAt, 60)
-const VINE_LEAVES = leavesAlong(vineAt, { from: 0.05, to: 0.97, step: 0.055 })
-
-// กิ่งมะกอกห้อยโค้ง: จากหัวเสาไปมุมการ์ด (viewBox 220x70) + ลูกมะกอก
-const swagAt = (t) => [6 + 208 * t, 8 + 46 * 4 * t * (1 - t) * (1 - 0.25 * t)]
-const SWAG_STEM = stemPath(swagAt, 40)
-const SWAG_LEAVES = leavesAlong(swagAt, {
-  from: 0.06,
-  to: 0.94,
-  step: 0.06,
-  rx: 7,
-  spread: 58,
-})
-const OLIVES = [0.3, 0.52, 0.71].map((t) => {
-  const [x, y] = swagAt(t)
-  return { cx: f(x + 3), cy: f(y + 7) }
-})
-
-function Leaves({ items, rx, ry }) {
-  return items.map((l, i) => (
-    <ellipse key={i} cx={l.cx} cy={l.cy} rx={rx} ry={ry} transform={`rotate(${l.rot} ${l.cx} ${l.cy})`} />
-  ))
-}
-
-export function OliveSwag({ className }) {
+function Leaf({ x, y, ang, l }) {
+  const w = l * 0.2
   return (
-    <svg className={`olive ${className}`} viewBox="0 0 220 70" aria-hidden="true" focusable="false">
-      <path className="olive__stem" d={SWAG_STEM} />
-      <g className="olive__leaf">
-        <Leaves items={SWAG_LEAVES} rx={7} ry={2.6} />
-      </g>
-      <g className="olive__fruit">
-        {OLIVES.map((o, i) => (
-          <ellipse key={i} cx={o.cx} cy={o.cy} rx="2.6" ry="3.4" />
-        ))}
-      </g>
+    <g transform={`translate(${x} ${y}) rotate(${ang})`}>
+      <path
+        className="botanic__leaf"
+        d={`M0 0C${f(l * 0.3)} ${f(-w)} ${f(l * 0.72)} ${f(-w * 0.8)} ${l} 0C${f(l * 0.72)} ${f(w * 0.8)} ${f(l * 0.3)} ${f(w)} 0 0Z`}
+      />
+      <path className="botanic__rib" d={`M${f(l * 0.08)} 0L${f(l * 0.8)} 0`} />
+    </g>
+  )
+}
+
+// ----- กิ่งยาว (แนวตั้ง viewBox 150x380): โคนที่มุมขวาบน (ซ่อนหลังการ์ด) โค้งออกซ้ายแล้วทิ้งตัวลง -----
+const MAIN = cubic([146, 16], [48, 26], [6, 170], [52, 370])
+// กิ่งแขนงแตกจากกิ่งหลักราวหนึ่งในสาม
+const twigBase = MAIN(0.34)
+const TWIG_AT = cubic(twigBase, [twigBase[0] - 20, twigBase[1] + 6], [twigBase[0] - 34, twigBase[1] + 30], [twigBase[0] - 30, twigBase[1] + 64])
+const BRANCH = {
+  stem: pathOf(MAIN),
+  twig: pathOf(TWIG_AT, 16),
+  leaves: [
+    ...leavesOn(MAIN, { from: 0.12, to: 0.96, count: 13, len: 34 }),
+    ...leavesOn(TWIG_AT, { from: 0.3, to: 0.95, count: 4, len: 22, startSide: 1 }),
+  ],
+  tip: (() => {
+    const [x, y] = MAIN(1)
+    const [x0, y0] = MAIN(0.98)
+    return { x: f(x), y: f(y), ang: f((Math.atan2(y - y0, x - x0) * 180) / Math.PI), l: 20 }
+  })(),
+  // ลูกมะกอกห้อยเป็นพวงเล็ก ๆ จากกิ่ง
+  olives: [0.46, 0.5, 0.62].map((t, i) => {
+    const [x, y] = MAIN(t)
+    const dx = [16, 8, 14][i]
+    const dy = [10, 18, 6][i]
+    return { sx: f(x), sy: f(y), cx: f(x + dx), cy: f(y + dy), rot: [-30, -10, -40][i] }
+  }),
+}
+
+function OliveBranch({ className }) {
+  return (
+    <svg className={`botanic ${className}`} viewBox="0 0 150 380" focusable="false">
+      <path className="botanic__stem" d={BRANCH.stem} />
+      <path className="botanic__stem botanic__stem--thin" d={BRANCH.twig} />
+      {BRANCH.olives.map((o, i) => (
+        <g key={i}>
+          <path className="botanic__stem botanic__stem--thin" d={`M${o.sx} ${o.sy}L${o.cx} ${o.cy}`} />
+          <ellipse className="botanic__olive" cx={o.cx} cy={o.cy} rx="4.2" ry="5.6" transform={`rotate(${o.rot} ${o.cx} ${o.cy})`} />
+        </g>
+      ))}
+      {BRANCH.leaves.map((l, i) => (
+        <Leaf key={i} {...l} />
+      ))}
+      <Leaf {...BRANCH.tip} />
     </svg>
   )
 }
 
-// เสาไอโอนิก: หัวเสา (ก้นหอย) / ลำเสาร่อง (ยืดตามความสูง) / ฐานเสา
-function IonicColumn({ side }) {
-  const flutes = [16, 26, 36, 44, 54, 64]
+// ----- กิ่งสั้น (แนวนอน viewBox 200x70): ใช้บนจอแคบ โผล่เหนือ/ใต้มุมการ์ด -----
+const SPRIG_AT = cubic([196, 60], [150, 40], [70, 12], [8, 22])
+const SPRIG = {
+  stem: pathOf(SPRIG_AT, 24),
+  leaves: leavesOn(SPRIG_AT, { from: 0.14, to: 0.94, count: 8, len: 24, spread: 42 }),
+}
+
+export function OliveSprig({ className }) {
   return (
-    <div className={`acol acol--${side}`} aria-hidden="true">
-      <svg className="acol__capital" viewBox="0 0 120 46" focusable="false">
-        <rect className="acol__stone" x="4" y="1" width="112" height="7" />
-        <path className="acol__stone" d="M14 8H106C110 8 112 12 112 16V22H8V16C8 12 10 8 14 8Z" />
-        {/* ก้นหอย (volute) สองข้าง */}
-        <circle className="acol__stone" cx="16" cy="22" r="12" />
-        <circle className="acol__stone" cx="104" cy="22" r="12" />
-        <path className="acol__line" d="M16 22m0-7a7 7 0 1 1-7 7a4 4 0 0 1 4-4a2 2 0 0 1 2 2" />
-        <path className="acol__line" d="M104 22m0-7a7 7 0 1 0 7 7a4 4 0 0 0-4-4a2 2 0 0 0-2 2" />
-        {/* ไข่-ลูกศร (echinus) */}
-        <path className="acol__line" d="M34 20q6 8 12 0q6 8 12 0q6 8 12 0q6 8 12 0q6 8 12 0" />
-        <rect className="acol__stone" x="22" y="34" width="76" height="5" rx="2" />
-        <rect className="acol__stone" x="20" y="39" width="80" height="7" />
-      </svg>
+    <svg className={`botanic ${className}`} viewBox="0 0 200 70" focusable="false">
+      <path className="botanic__stem" d={SPRIG.stem} />
+      {SPRIG.leaves.map((l, i) => (
+        <Leaf key={i} {...l} />
+      ))}
+      <ellipse className="botanic__olive" cx="104" cy="44" rx="3.6" ry="4.8" transform="rotate(-20 104 44)" />
+    </svg>
+  )
+}
 
-      <svg className="acol__shaft" viewBox="0 0 80 100" preserveAspectRatio="none" focusable="false">
-        <defs>
-          <linearGradient id={`acol-marble-${side}`} x1="0" x2="1">
-            <stop offset="0" stopColor="#d9cbae" />
-            <stop offset="0.38" stopColor="#ece2cc" />
-            <stop offset="0.62" stopColor="#e6dac0" />
-            <stop offset="1" stopColor="#cfbf9f" />
-          </linearGradient>
-        </defs>
-        <rect x="0" y="0" width="80" height="100" fill={`url(#acol-marble-${side})`} />
-        {flutes.map((x) => (
-          <line key={x} className="acol__flute" x1={x} y1="0" x2={x} y2="100" vectorEffect="non-scaling-stroke" />
-        ))}
-        <line className="acol__line" x1="0.5" y1="0" x2="0.5" y2="100" vectorEffect="non-scaling-stroke" />
-        <line className="acol__line" x1="79.5" y1="0" x2="79.5" y2="100" vectorEffect="non-scaling-stroke" />
-      </svg>
-
-      <svg className="acol__base" viewBox="0 0 120 34" focusable="false">
-        <rect className="acol__stone" x="16" y="0" width="88" height="7" rx="3.5" />
-        <path className="acol__stone" d="M20 7H100L96 14H24Z" />
-        <rect className="acol__stone" x="10" y="14" width="100" height="9" rx="4.5" />
-        <rect className="acol__stone" x="2" y="23" width="116" height="11" />
-      </svg>
-
-      {/* กิ่งมะกอกเลื้อยขึ้นลำเสา */}
-      <svg className="olive acol__vine" viewBox="0 0 60 220" focusable="false">
-        <path className="olive__stem" d={VINE_STEM} />
-        <g className="olive__leaf">
-          <Leaves items={VINE_LEAVES} rx={6} ry={2.3} />
-        </g>
-      </svg>
-    </div>
+// ----- มุมทองแบบกรอบหนังสือ: เส้นคู่ + ปลายม้วน + เพชรเล็กที่มุม (วาดเป็นมุมซ้ายบน หมุนด้วย CSS) -----
+function GoldCorner({ className }) {
+  return (
+    <svg className={`gold-corner ${className}`} viewBox="0 0 80 80" focusable="false">
+      <path d="M6 74V6H74" />
+      <path className="gold-corner__fine" d="M12 62V12H62" />
+      <path className="gold-corner__fine" d="M6 74c0 3 4 4 5 1M74 6c3 0 4 4 1 5" />
+      <path className="gold-corner__gem" d="M6 1L11 6L6 11L1 6Z" />
+    </svg>
   )
 }
 
 export default function AboutDecor() {
   return (
     <div className="about__decor" aria-hidden="true">
-      <IonicColumn side="left" />
-      <IonicColumn side="right" />
-      <OliveSwag className="about__swag about__swag--left" />
-      <OliveSwag className="about__swag about__swag--right" />
+      <OliveBranch className="botanic--branch-tl" />
+      <OliveBranch className="botanic--branch-br" />
+      <OliveSprig className="botanic--sprig-tl" />
+      <OliveSprig className="botanic--sprig-br" />
+      <GoldCorner className="gold-corner--tr" />
+      <GoldCorner className="gold-corner--bl" />
       <Swallow className="about__bird about__bird--1" />
       <Swallow className="about__bird about__bird--2" />
     </div>

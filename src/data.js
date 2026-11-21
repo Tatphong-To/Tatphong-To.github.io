@@ -6,14 +6,45 @@ export const profile = {
   firstName: 'Tatphong',
   lastName: 'Tongyuang',
   role: 'Full Stack Developer Intern',
-  tagline: 'สร้างเว็บและแอปที่ใช้งานได้จริง ตั้งแต่หน้าจอไปจนถึง API และระบบข้อมูล',
+  tagline: 'สร้างเว็บและแอปที่ใช้งานได้จริง ตั้งแต่หน้าจอไปจนถึง API และระบบข้อมูล', // ตัดบรรทัดได้เฉพาะที่เว้นวรรค (และ |)
   photo: '/images/profile.png',
   resumeUrl: '/Tatphong_Resume.pdf', // วางไฟล์ที่ public/Tatphong_Resume.pdf
   status: 'เปิดรับฝึกงาน 4–6 เดือน', // ป้ายสถานะใน Hero และ Footer (ใส่ '' เพื่อซ่อน)
   // ===== About Me =====
-  aboutHeadline: 'นักศึกษาที่ชอบเปลี่ยนไอเดียให้เป็นแอปที่ใช้งานได้จริง',
+  // การตัดบรรทัดภาษาไทย: ตัดได้เฉพาะที่เว้นวรรค และที่เครื่องหมาย | (ไม่แสดงบนหน้า)
+  //   คำที่ต้องอยู่บรรทัดเดียวกันให้คั่นด้วย \u00a0 (เว้นวรรคแบบไม่ตัดบรรทัด)
+  aboutHeadline: 'นักพัฒนาที่ชอบเปลี่ยนไอเดีย|ให้เป็นระบบที่ใช้งานได้จริง',
   about:
-    'นักศึกษาชั้นปีที่ 4 สาขาเทคโนโลยีสารสนเทศ สนใจงานฝั่ง backend เป็นพิเศษ มีประสบการณ์สร้าง API, ระบบแนะนำที่ใช้ LLM, web scraping, data pipeline ด้วย Airflow และ Docker/CI/CD พร้อมเริ่มฝึกงานภายใน 2 สัปดาห์',
+    'มีประสบการณ์พัฒนา Backend และ REST\u00a0API ด้วย Spring\u00a0Boot, Web\u00a0Scraping และ Data\u00a0Pipeline ด้วย Airflow รวมถึง|ประยุกต์ใช้ LLM กับระบบแนะนำ|อาหารและสินค้า พร้อมทำงานกับ Docker และ CI/CD เพื่อพัฒนา|และจัดการระบบ|อย่างเป็นระบบ',
+  // คอลัมน์ขวาของการ์ด About (icon ที่ใช้ได้: container, server, pipeline, team, bulb)
+  // ใช้ | และ \u00a0 ได้เหมือนข้อความ about ด้านบน
+  strengths: [
+    {
+      title: 'Containerization',
+      description: 'ใช้งาน Docker และจัดการ Container สำหรับพัฒนาและรันระบบ',
+      icon: 'container',
+    },
+    {
+      title: 'Server & Deployment',
+      description: 'มีประสบการณ์ตั้งค่า VPS และ Deploy แอปพลิเคชันบน Server',
+      icon: 'server',
+    },
+    {
+      title: 'CI/CD & Automation',
+      description: 'ใช้งาน GitHub\u00a0Actions สำหรับจัดการ Build, Testing และ Workflow อัตโนมัติ',
+      icon: 'pipeline',
+    },
+    {
+      title: 'Team Collaboration',
+      description: 'สามารถทำงานร่วมกับทีมผ่าน Git และ GitHub รวมถึงการจัดการ Version\u00a0Control',
+      icon: 'team',
+    },
+    {
+      title: 'Problem Solving',
+      description: 'เรียนรู้เทคโนโลยีใหม่ได้รวดเร็ว พร้อมวิเคราะห์และแก้ไขปัญหา|ในการพัฒนาระบบ',
+      icon: 'bulb',
+    },
+  ],
   education: 'ม.เกษตรศาสตร์ กำแพงแสน · วท.บ. เทคโนโลยีสารสนเทศ', // ใส่ '' เพื่อซ่อน
   phone: '', // ใส่ '' เพื่อซ่อน
   email: 'tatphong.to@gmail.com',
