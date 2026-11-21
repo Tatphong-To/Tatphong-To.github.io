@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import './TEMP-variants.js' // TEMP: สวิตช์ ?roof=a|b — ลบหลังเลือกแบบแล้ว
 import './index.css'
 import App from './App.jsx'
 
