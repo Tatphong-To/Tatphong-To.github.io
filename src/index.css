@@ -1,5 +1,24 @@
-/* ===== Wireframe: reset + layout พื้นฐาน ขาวดำ ไม่มีการตกแต่ง ===== */
+/* ===== Design tokens: ธีม "Archivum" (กระดาษเก่า + หมึก + แดงปอมเปอี) ===== */
 :root {
+  /* สี */
+  --paper: #efe6d2; /* พื้นกระดาษ */
+  --ink: #2b2118; /* ตัวอักษรหลัก ~13:1 บนกระดาษ */
+  --ink-soft: #5e4e3c; /* ตัวอักษรรอง ~6.5:1 */
+  --accent: #7a2e22; /* แดงปอมเปอี: ปุ่มหลัก ลิงก์ focus ~8:1 */
+  --accent-hover: #5f2219;
+  --rule: rgb(43 33 24 / 0.35); /* เส้นคั่น */
+
+  /* สีพื้นการ์ดโปรเจกต์ (ใช้ตัวอักษรสี --paper) */
+  --roman-red: #7a2e22;
+  --verdigris: #3f6359;
+  --tyrian: #4f2742;
+  --umber: #4a3826;
+
+  /* ฟอนต์: Cinzel = ละติน small caps (หัวข้อ), Taviraj = ไทย + ละติน (เนื้อหา และสำรองให้หัวข้อภาษาไทย) */
+  --display: 'Cinzel', 'Taviraj', Georgia, serif;
+  --text: 'Taviraj', Georgia, serif;
+
+  /* layout */
   --container: 1120px;
   --nav-h: 64px;
   --gap: 24px;
@@ -18,10 +37,30 @@ html {
 
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
-  line-height: 1.5;
-  background: #fff;
-  color: #000;
+  font-family: var(--text);
+  font-size: 1.0625rem; /* 17px: ภาษาไทยอ่านสบาย */
+  line-height: 1.8;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* พื้นผิวกระดาษ: noise จาก SVG feTurbulence (ไม่ใช้ไฟล์รูป) + ขอบมืดจาง ๆ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, transparent 55%, rgb(74 56 38 / 0.14) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .17 0 0 0 0 .13 0 0 0 0 .09 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--display);
+  font-weight: 400;
 }
 
 h1,
@@ -43,7 +82,7 @@ ul {
 img {
   display: block;
   max-width: 100%;
-  filter: grayscale(1); /* wireframe = ขาวดำ */
+  filter: grayscale(1); /* ส่วนที่ยังเป็น wireframe = ขาวดำ */
 }
 
 svg {
@@ -53,21 +92,26 @@ svg {
   height: 20px;
 }
 
+/* ลิงก์มีขีดเส้นใต้เสมอ (ไม่ใช้สีอย่างเดียวบอกว่าเป็นลิงก์) */
 a {
   color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
 
 button {
   font: inherit;
   color: inherit;
-  background: #fff;
-  border: 1px solid #000;
+  background: transparent;
+  border: 1px solid var(--ink);
   cursor: pointer;
 }
 
+/* focus ring หนา 2px สีเน้น เห็นชัดบนกระดาษ */
 :focus-visible {
-  outline: 2px solid #000;
-  outline-offset: 2px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 /* ให้ลิงก์ในเมนูเลื่อนไปแล้วไม่โดน navbar บัง */
@@ -83,9 +127,23 @@ footer[id] {
   padding: 0 16px;
 }
 
+/* หัวข้อ section: Cinzel หนา ใหญ่ + เครื่องประดับใต้หัวข้อ (เส้นทอง + กิ่งลอเรลเล็ก) ชุดเดียวทั้งหน้า */
 .section-title {
   margin-bottom: var(--gap);
-  font-size: 1.75rem;
+  font-size: clamp(2.5rem, 5vw, 4.5rem); /* ต่ำสุด 40px (> 2.25rem บนมือถือ) */
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: clamp(120px, 11vw, 168px);
+  aspect-ratio: 150 / 20;
+  margin-top: clamp(10px, 1vw, 16px);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 20'%3E%3Cg fill='none' stroke='%23a8843f' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M1 10H90'/%3E%3Cpath d='M96 10Q120 10 147 6'/%3E%3C/g%3E%3Cg fill='%23a8843f'%3E%3Ccircle cx='93' cy='10' r='2.3'/%3E%3Cellipse cx='105' cy='6.2' rx='5' ry='1.9' transform='rotate(-30 105 6.2)'/%3E%3Cellipse cx='108' cy='13.6' rx='5' ry='1.9' transform='rotate(30 108 13.6)'/%3E%3Cellipse cx='118' cy='5' rx='5' ry='1.9' transform='rotate(-32 118 5)'/%3E%3Cellipse cx='121.5' cy='12.4' rx='5' ry='1.9' transform='rotate(26 121.5 12.4)'/%3E%3Cellipse cx='131' cy='3.6' rx='4.6' ry='1.8' transform='rotate(-34 131 3.6)'/%3E%3Cellipse cx='135' cy='10.6' rx='4.6' ry='1.8' transform='rotate(22 135 10.6)'/%3E%3Cellipse cx='145' cy='4.6' rx='3.8' ry='1.6' transform='rotate(-12 145 4.6)'/%3E%3C/g%3E%3C/svg%3E")
+    left center / contain no-repeat;
 }
 
 /* ปุ่ม (ใช้ร่วมกัน) */
@@ -94,14 +152,34 @@ footer[id] {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 16px;
-  border: 1px solid #000;
+  min-height: 44px;
+  padding: 10px 20px;
+  border: 1px solid var(--ink);
+  font-family: var(--display);
+  letter-spacing: 0.04em;
   text-decoration: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .btn svg {
   width: 16px;
   height: 16px;
+}
+
+.btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+}
+
+.btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn--ghost:hover {
+  background: var(--ink);
+  color: var(--paper);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -114,4 +192,17 @@ footer[id] {
   *::after {
     transition: none !important;
   }
+}
+
+/* ข้อความที่ซ่อนจากสายตาแต่ screen reader อ่านได้ */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
